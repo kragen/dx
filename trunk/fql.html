@@ -190,9 +190,16 @@ var status_template = tmpl.as_template([
     '<abbr title="',time_template,'" class="timestamp">',relative_time_template,'</abbr></a></span>'
 ]);
 
-function render_status_message(message) {
-    return status_template.render(message);
+function FQL_Status(obj) {
+    $.extend(this, obj);
 }
+FQL_Status.prototype.render = function() {
+    return status_template.render(this);
+};
+FQL_Status.prototype.time_t = function() { return this.time };
+FQL_Status.prototype.matches = function(string) {
+    return -1 != this.message.toLowerCase().indexOf(string);
+};
 
 function display_status_messages(filter) {
     if (!status_messages) {
@@ -202,12 +209,13 @@ function display_status_messages(filter) {
         }
     }
     var msgs = status_messages || [];
-    if (!filter) filter = function() { return true };
+    if (!filter) filter = '';
 
     var html = [];
     for (var ii = 0; ii < msgs.length; ii++) {
-        if (filter(msgs[ii])) {
-            html.push(render_status_message(msgs[ii]));
+        var msg = new FQL_Status(msgs[ii]);
+        if (msg.matches(filter)) {
+            html.push(msg.render());
         }
     }
     if (!html.length) {
@@ -262,9 +270,7 @@ function export_storage () {
 }
 
 function do_search(self) {
-    var v = self.value.toLowerCase();
-    var filter = function(message) { return -1 != message.message.toLowerCase().indexOf(v) };
-    display_status_messages(filter);                          
+    display_status_messages(self.value.toLowerCase());
 }
 
 var search_to;
