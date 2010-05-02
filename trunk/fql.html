@@ -69,7 +69,7 @@ font-size: 15px;
 | <a href="javascript:display_status_messages()">display status messages</a>
 | <a href="javascript:export_storage()">json export in popup</a>
 | <a href="javascript:reset_storage()">erase all stored information</a>
-<span>| <a href="#" onclick="$('.devtools').show();$(this).parent().hide()">show dev tools</a></span>
+<span>| <a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>
 <div class="devtools">
   <textarea id="FQL" rows=3 cols=80>SELECT time, message, status_id from status where uid=1173721181</textarea>
   <button onclick="do_query()">run query »</button>
@@ -80,7 +80,7 @@ font-size: 15px;
 </div>
 <div class="status_messages"></div>
 <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US" type="text/javascript"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
 <script src="/jquery.json-2.2.min.js"></script>
 <script src="local_storage.js"></script>
 <script src="karnak.js"></script>
@@ -212,7 +212,7 @@ function display_status_messages(filter) {
         html.push('<div class="error">No status messages found.</div>');
     }
 
-    $('.status_messages').html(html.join(''));                          
+    $('.status_messages').each(function(){ this.innerHTML = html.join('') });
 }
 
 function reset_storage () {
@@ -231,13 +231,21 @@ function export_storage () {
     }
 }
 
-function do_search() {
-    var v = this.value.toLowerCase();
+function do_search(self) {
+    var v = self.value.toLowerCase();
     var filter = function(message) { return -1 != message.message.toLowerCase().indexOf(v) };
     display_status_messages(filter);                          
 }
 
-$(function(){ $('.search').keyup(do_search).change(do_search) });
+var search_to;
+function init_search() {
+    var that = this;
+    if (!search_to) {
+        search_to = setTimeout(function() { search_to = undefined; do_search(that) }, 0);
+    }
+}
+
+$(function(){ $('.search').keyup(init_search).change(init_search).focus() });
 
 </script>
 </body>
