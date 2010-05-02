@@ -147,9 +147,9 @@ var replicas = {
   ,remove: function(key) { // XXX this is not working!
         var k = 'fql_' + key;
         output(['deleting', k]);
-        get_local_storage().remove(key);
+        get_local_storage().remove(k);
         output(['gone from local storage', k]);
-        delete window[k];
+        window[k] = undefined;  // Can't use `delete`, because in IE, "Object does not support this action"
         output(['gone from window', k]);
         if (key in this._channels) this._channels[key].changed();
         output(['notified of change', k]);
@@ -160,7 +160,7 @@ var replicas = {
 function retrieve_status_messages() {
     var query = 'SELECT uid, time, message, status_id from status where uid=' + 
             FB.Connect.get_loggedInUser();
-    FB.Facebook.apiClient.fql_query(query, function (response) {store_status_messages(response); display_status_messages(); });
+    FB.Facebook.apiClient.fql_query(query, store_status_messages);
 }
 
 function store_status_messages(new_status_messages) {
