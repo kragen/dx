@@ -86,6 +86,7 @@ font-size: 15px;
 <script src="json2.js"></script>
 <script src="local_storage.js"></script>
 <script src="karnak.js"></script>
+<script src="channel.js"></script>
 <script type="text/javascript">
 
 var knx_fb_api_key = "2a2806da8abe66693e14bbbcbe9c0c64";
@@ -121,7 +122,8 @@ function output(response) {
 
 /* replication of FQL tables */
 var replicas = {
-  get: function(key) {
+  _channels: {}
+  ,get: function(key) {
         var k = 'fql_' + key;
         if (window[k]) return window[k];
         var string = get_local_storage().get(k);
@@ -136,11 +138,21 @@ var replicas = {
         window[k] = value;
         get_local_storage().set(k, JSON.stringify(value, undefined, 3));
         output(['stored', k, value.length]);
+        if (key in this._channels) this._channels[key].changed();
     }
-  ,remove: function(key) {
+  ,on_change: function(key, observer) {
+        if (!(key in this._channels)) this._channels[key] = new Channel();
+        this._channels[key].on_change(observer);
+    }
+  ,remove: function(key) { // XXX this is not working!
         var k = 'fql_' + key;
+        output(['deleting', k]);
         get_local_storage().remove(key);
+        output(['gone from local storage', k]);
         delete window[k];
+        output(['gone from window', k]);
+        if (key in this._channels) this._channels[key].changed();
+        output(['notified of change', k]);
     }
 };
 
@@ -224,13 +236,31 @@ FQL_Status.prototype.matches = function(string) {
     return -1 != this.message.toLowerCase().indexOf(string);
 };
 
+var posts = [];
+var posts_channel = new Channel();
+
+function update_posts() {
+    posts = [];
+    var status = replicas.get('status') || [];
+    for (var ii = 0; ii < status.length; ii++) {
+        posts.push(new FQL_Status(status[ii]));
+    }
+    posts.sort(function(a, b) {
+            return b.time_t() - a.time_t();
+    });
+    posts_channel.changed();
+}
+
+replicas.on_change('status', update_posts);
+replicas.on_change('link', update_posts);
+update_posts();
+
 function display_status_messages(filter) {
-    var msgs = replicas.get('status') || [];
     if (!filter) filter = '';
 
     var html = [];
-    for (var ii = 0; ii < msgs.length; ii++) {
-        var msg = new FQL_Status(msgs[ii]);
+    for (var ii = 0; ii < posts.length; ii++) {
+        var msg = posts[ii];
         if (msg.matches(filter)) {
             html.push(msg.render());
         }
@@ -241,6 +271,7 @@ function display_status_messages(filter) {
 
     $('.status_messages').each(function(){ this.innerHTML = html.join('') });
 }
+posts_channel.on_change(display_status_messages);
 
 
 function retrieve_link() {
@@ -271,7 +302,6 @@ function display_link() {
 function reset_storage () {
     replicas.remove('status');
     replicas.remove('link');
-    display_status_messages();
 }
 
 function export_storage () {
