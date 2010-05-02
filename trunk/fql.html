@@ -66,6 +66,7 @@ font-size: 15px;
 <a href="javascript:login()">log in to FB!</a>
 | <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out!</a>
 | <a href="javascript:FB.Connect.requireSession(retrieve_status_messages)">retrieve status messages</a>
+| <a href="javascript:FB.Connect.requireSession(retrieve_link)">retrieve links</a>
 | <a href="javascript:display_status_messages()">display status messages</a>
 | <a href="javascript:export_storage()">json export in popup</a>
 | <a href="javascript:reset_storage()">erase all stored information</a>
@@ -79,6 +80,7 @@ font-size: 15px;
   Search: <input class="search" size="64" />
 </div>
 <div class="status_messages"></div>
+<div class="fql_link"></div>
 <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US" type="text/javascript"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
 <script src="json2.js"></script>
@@ -215,6 +217,34 @@ function display_status_messages(filter) {
     $('.status_messages').each(function(){ this.innerHTML = html.join('') });
 }
 
+
+var link;
+
+function retrieve_link() {
+    var query = 'select link_id,owner,owner_comment,created_time,title,summary,url,image_urls from link where owner = ' +
+        FB.Connect.get_loggedInUser();
+    FB.Facebook.apiClient.fql_query(query, function(response) {store_link(response); display_link(); });
+}
+
+function store_link(response) {
+    if (!response) return;
+    link = response;
+    get_local_storage().set('link', JSON.stringify(response, undefined, 3));
+}
+
+function render_link(a_link) {
+    return htmlescape(a_link.url) + '<br />';
+}
+
+function display_link() {
+    var html = [];
+    for (var ii = 0; ii < link.length; ii++) {
+        html.push(render_link(link[ii]));
+    }
+    $('.fql_link').each(function() { this.innerHTML = html.join('') });
+}
+
+
 function reset_storage () {
     get_local_storage().remove('status_messages')
     if (status_messages) { status_messages = null; }
@@ -226,7 +256,7 @@ function export_storage () {
     if (g) {
         var popup = window.open('#', '_blank');
         popup.document.open('text/plain');
-        popup.document.write(g.replace(/\}\,\{/g , '},\n{')); 
+        popup.document.write(g);
         popup.document.close();
     }
 }
