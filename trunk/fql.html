@@ -248,18 +248,14 @@ function store_link(response) {
     replicas.set('link', response);
 }
 
-function render_link(a_link) {
-    return htmlescape(a_link.url) + '<br />';
+function FQL_Link(obj) {
+    $.extend(this, obj);
 }
-
-function display_link() {
-    var link = replicas.get('link');
-    var html = [];
-    for (var ii = 0; ii < link.length; ii++) {
-        html.push(render_link(link[ii]));
-    }
-    $('.fql_link').each(function() { this.innerHTML = html.join('') });
-}
+FQL_Link.prototype.render = function() {
+    return htmlescape(this.url) + '<br />';
+};
+FQL_Link.prototype.time_t = function() { return this.created_time };
+FQL_Link.prototype.matches = function(string) { return true };
 
 
 function reset_storage () {
@@ -285,10 +281,17 @@ var posts_channel = new Channel();
 
 function update_posts() {
     posts = [];
+
     var status = replicas.get('status') || [];
     for (var ii = 0; ii < status.length; ii++) {
         posts.push(new FQL_Status(status[ii]));
     }
+
+    var link = replicas.get('link') || [];
+    for (var ii = 0; ii < link.length; ii++) {
+        posts.push(new FQL_Link(link[ii]));
+    }
+
     posts.sort(function(a, b) {
             return b.time_t() - a.time_t();
     });
