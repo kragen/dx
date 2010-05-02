@@ -118,7 +118,32 @@ function output(response) {
     if (typeof console != 'undefined') console.log(response);
 }
 
-var status_messages;
+
+/* replication of FQL tables */
+var replicas = {
+  get: function(key) {
+        var k = 'fql_' + key;
+        if (window[k]) return window[k];
+        var string = get_local_storage().get(k);
+        if (string) {
+            window[k] = JSON.parse(string);
+            return window[k];
+        }
+        return undefined;
+    }
+  ,set: function(key, value) {
+        var k = 'fql_' + key;
+        window[k] = value;
+        get_local_storage().set(k, JSON.stringify(value, undefined, 3));
+        output(['stored', k, value.length]);
+    }
+  ,remove: function(key) {
+        var k = 'fql_' + key;
+        get_local_storage().remove(key);
+        delete window[k];
+    }
+};
+
 
 function retrieve_status_messages() {
     var query = 'SELECT uid, time, message, status_id from status where uid=' + 
@@ -128,9 +153,7 @@ function retrieve_status_messages() {
 
 function store_status_messages(new_status_messages) {
     if (!new_status_messages) return;
-    status_messages = new_status_messages;
-    get_local_storage().set('status_messages', JSON.stringify(status_messages, undefined, 3));
-    output(["stored status_messages:", status_messages.length]);
+    replicas.set('status', new_status_messages);
 }
 
 function displayDate(unix_epoch) {
@@ -202,13 +225,7 @@ FQL_Status.prototype.matches = function(string) {
 };
 
 function display_status_messages(filter) {
-    if (!status_messages) {
-        var g = get_local_storage().get('status_messages');
-        if (g) {
-            status_messages = JSON.parse(g);
-        }
-    }
-    var msgs = status_messages || [];
+    var msgs = replicas.get('status') || [];
     if (!filter) filter = '';
 
     var html = [];
@@ -226,8 +243,6 @@ function display_status_messages(filter) {
 }
 
 
-var link;
-
 function retrieve_link() {
     var query = 'select link_id,owner,owner_comment,created_time,title,summary,url,image_urls from link where owner = ' +
         FB.Connect.get_loggedInUser();
@@ -236,8 +251,7 @@ function retrieve_link() {
 
 function store_link(response) {
     if (!response) return;
-    link = response;
-    get_local_storage().set('link', JSON.stringify(response, undefined, 3));
+    replicas.set('link', response);
 }
 
 function render_link(a_link) {
@@ -245,6 +259,7 @@ function render_link(a_link) {
 }
 
 function display_link() {
+    var link = replicas.get('link');
     var html = [];
     for (var ii = 0; ii < link.length; ii++) {
         html.push(render_link(link[ii]));
@@ -254,19 +269,21 @@ function display_link() {
 
 
 function reset_storage () {
-    get_local_storage().remove('status_messages')
-    if (status_messages) { status_messages = null; }
+    replicas.remove('status');
+    replicas.remove('link');
     display_status_messages();
 }
 
 function export_storage () {
-    var g = get_local_storage().get('status_messages');
-    if (g) {
-        var popup = window.open('#', '_blank');
-        popup.document.open('text/plain');
-        popup.document.write(g);
-        popup.document.close();
-    }
+    var g = {
+      status: replicas.get('status')
+      ,link: replicas.get('link')
+    };
+
+    var popup = window.open('#', '_blank');
+    popup.document.open('text/plain');
+    popup.document.write(JSON.stringify(g, undefined, 3));
+    popup.document.close();
 }
 
 function do_search(self) {
