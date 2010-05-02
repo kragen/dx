@@ -15,16 +15,28 @@
   <body>
     <div id="fb-root"></div>
     <script>
+      function show(response) {
+          $('#output').html('<code>' + $.toJSON(response) + '</code>');
+          if (console) console.log(response);
+      }
       function onConnected() {
           $('#output').html('connected!');
-FB.api('/me', function(response) {
-          $('#output').html('<code>' + $.toJSON(response) + '</code>');
-});      }
+          FB.api('/me', show);
+      }
 
       function onNotConnected() {
           $('#output').html('not connected');
       }
 
+      function onLoginStatusResponse(response) {
+              if (response.session) {
+                  // logged in and connected user, someone you know
+                  onConnected();
+              } else {
+                  // no user session available, someone you dont know
+                  onNotConnected();
+              }
+          }
       window.fbAsyncInit = function() {
           FB.init( { appId: '120935017919365',
                      status: true,
@@ -37,15 +49,7 @@ FB.api('/me', function(response) {
           FB.Event.subscribe('auth.logout', function(response) {
               onNotConnected();
           });
-          FB.getLoginStatus(function(response) {
-              if (response.session) {
-                  // logged in and connected user, someone you know
-                  onConnected();
-              } else {
-                  // no user session available, someone you dont know
-                  onNotConnected();
-              }
-          });
+          FB.getLoginStatus(onLoginStatusResponse);
       };
 
       (function() {
@@ -76,7 +80,9 @@ FB.api('/me', function(response) {
     of your Web browser.</p>
 
     <p><fb:login-button autologoutlink="true"></fb:login-button></p>
+    <p><a href=# onclick="FB.login(onLoginStatusResponse, {perms: 'read_stream,email,user_events,user_photos'})">Request additional permissions</a></p>
 
+    Graph API Path: <input id="fbapipath" onchange="FB.api(this.value, eval('x='+$('#fbapiopts')[0].value), show)" value="/me/feed"/> Opts: <input id="fbapiopts" value="{offset:1,limit:2}" />
     <div id="output">Let’s find something of yours to put  here...</div>
 
     <hr/>
