@@ -6,14 +6,22 @@
 textarea { display: block }
 </style>
 </head> <body>
-<a href="javascript:login()">log in to FB!</a> <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out!</a>
-<textarea id="FQL" rows=3 cols=80>SELECT time, message from status where uid=1173721181</textarea>
+<a href="javascript:login()">log in to FB!</a>
+| <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out!</a>
+| <a href="javascript:retrieve_status_messages()">retrieve status messages</a>
+| <a href="javascript:display_status_messages()">display status messages</a>
+|  <a href="javascript:export_storage()">json export in popup</a>
+<textarea id="FQL" rows=3 cols=80>SELECT time, message, status_id from status where uid=1173721181</textarea>
 <button onclick="do_query()">run query »</button>
 <textarea id="output" rows=20 cols=80></textarea>
+<div class="status_messages"></div>
 <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US" type="text/javascript"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 <script src="/jquery.json-2.2.min.js"></script>
+<script src="local_storage.js"></script>
+<script src="karnak.js"></script>
 <script type="text/javascript">
+
 var knx_fb_api_key = "2a2806da8abe66693e14bbbcbe9c0c64";
 
 function onConnected() { output(["connected", FB.Connect.get_loggedInUser()]) }
@@ -40,6 +48,107 @@ function output(response) {
     if (console) console.log(response);
 }
 
+var status_messages;
+
+function retrieve_status_messages() {
+    var query = 'SELECT uid, time, message, status_id from status where uid=' + 
+            FB.Connect.get_loggedInUser();
+    FB.Facebook.apiClient.fql_query(query, store_status_messages);
+}
+
+function store_status_messages(new_status_messages) {
+    status_messages = new_status_messages;
+    get_local_storage().set('status_messages', $.toJSON(status_messages));
+    output(["stored status_messages:", status_messages.length]);
+}
+
+var status_template = tmpl.as_template([
+    '<h6 class="uiStreamMessage">',
+    '<a href="http://www.facebook.com/scottfoxbeale" class="actorName">Scott Beale</a> ',
+    tmpl.v('message'),
+    '</h6>',
+    '<div><span class="uiStreamSource">',
+    '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('status_id'),'">',
+    '<abbr title="Sat, 01 May 2010 21:30:43 -0700" class="timestamp">27 minutes ago</abbr></a></span></div>'
+]);
+
+function render_status_message(message) {
+    return status_template.render(message);
+}
+
+function display_status_messages() {
+    if (!status_messages) {
+        status_messages = $.evalJSON(get_local_storage().get('status_messages'));
+    }
+    if (!status_messages) return;
+    var html = [];
+    for (var ii = 0; ii < status_messages.length; ii++) {
+        html.push(render_status_message(status_messages[ii]));
+    }
+    $('.status_messages').html(html.join(''));                          
+}
+
+
+function export_storage () {
+    var popup = window.open('#', '_blank');
+    popup.document.open('text/plain');
+    popup.document.write(get_local_storage().get('status_messages')); 
+    popup.document.close();
+}
+
 </script>
+
+<style>
+body {
+color:#333333;
+direction:ltr;
+font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+font-size:11px;
+text-align:left;
+}
+.uiStreamMessage {
+font-size:13px;
+font-weight:normal;
+margin:0 0 5px;
+}
+.uiStreamMessage, .uiAttachmentTitle, .uiAttachmentDesc {
+word-wrap:break-word;
+}
+h1, h2, h3, h4, h5, h6 {
+color:#333333;
+font-size:13px;
+margin:0;
+padding:0;
+}
+.uiStreamMessage .actorName, .uiStreamMessage .passiveName {
+font-weight:bold;
+}
+a {
+color:#3B5998;
+cursor:pointer;
+outline-style:none;
+text-decoration:none;
+}
+abbr {
+border-bottom:medium none;
+}
+uiAttachmentDesc, .uiStreamPassive, .uiStreamSource, .uiStreamSource a {
+color:#808080;
+}
+a {
+color:#3B5998;
+cursor:pointer;
+text-decoration:none;
+}
+.uiStreamSource {
+display: block;
+margin-top: -0.25em;
+margin-bottom: 1em;
+}
+</style>
+<h6 class="uiStreamMessage"><a href="http://www.facebook.com/scottfoxbeale" class="actorName">Scott Beale</a> Police Find Explosives in S.U.V. in Times Square  <a target="_blank" rel="nofollow" onmousedown="UntrustedLink.bootstrap($(this), &quot;4e77d&quot;, event);" href="http://nyti.ms/bOYijB">http://nyti.ms/bOYijB</a> /via @moth</h6>
+<span class="uiStreamSource"><a href="http://www.facebook.com/profile.php?id=502763541&amp;v=wall&amp;story_fbid=113637188671865"><abbr title="Sat, 01 May 2010 21:30:43 -0700" class="timestamp">27 minutes ago</abbr></a></span>
+<h6 class="uiStreamMessage uiStreamPassive"><a href="http://www.facebook.com/dweekly" class="passiveName">David E. Weekly</a> likes <a href="http://www.facebook.com/AquariusTheatre">Aquarius Theatre</a>, <a href="http://www.facebook.com/pages/Lexington-MA/Lexington-Christian-Academy/32605499250">Lexington Christian Academy</a>, <a href="http://www.facebook.com/pages/Joinville-Swim-Center/113142965393175">Joinville Swim Center</a> and <a href="http://www.facebook.com/pages/TallAnnacom/122709891077089">TallAnna.com</a>.</h6>
+<span class="uiStreamSource"><i class="img spritemap_icons sx_icons_like"></i><abbr title="Sat, 01 May 2010 20:57:14 -0700" class="timestamp">about an hour ago</abbr></span>
 </body>
 </html>
