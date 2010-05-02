@@ -100,24 +100,29 @@ function displayDate(unix_epoch) {
   } else if (age_y > 0) {
         s += ((age_y >= 2) ? age_y + " years ago" : "last year");
   }
-  if (age >= 2*24*60*60*1000) {
-    s += (' on ' + d.toLocaleDateString());
-  } else {
-    s += (' at ' + d.toLocaleTimeString().toLowerCase());
-  }
   return s;
 }
 
-var time_template = {render:function(vars){return displayDate(vars.time)}};
+function autolinkify(text) {
+    return (''+text).replace(/http:\/\/[^\s<>"]*[^\s<>".,]/g,
+                             '<a href="$&" target="_blank">$&</a>');
+}
+
+function autolinkify_var(v) {
+    return {render:function(vars) { return autolinkify(htmlescape(vars[v])) }};
+}                  
+
+var relative_time_template = {render:function(vars){return displayDate(vars.time)}};
+var time_template = {render:function(vars){return ''+new Date(1000*vars.time)}};
 
 var status_template = tmpl.as_template([
     '<h6 class="uiStreamMessage">',
     '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'" class="actorName">','You','</a> ',
-    tmpl.v('message'),
+    autolinkify_var('message'),
     '</h6>',
     '<span class="uiStreamSource">',
     '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('status_id'),'">',
-    '<abbr title="',time_template,'" class="timestamp">',time_template,'</abbr></a></span>'
+    '<abbr title="',time_template,'" class="timestamp">',relative_time_template,'</abbr></a></span>'
 ]);
 
 function render_status_message(message) {
