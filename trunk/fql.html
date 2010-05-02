@@ -240,7 +240,7 @@ FQL_Status.prototype.matches = function(string) {
 function retrieve_link() {
     var query = 'select link_id,owner,owner_comment,created_time,title,summary,url,image_urls from link where owner = ' +
         FB.Connect.get_loggedInUser();
-    FB.Facebook.apiClient.fql_query(query, function(response) {store_link(response); display_link(); });
+    FB.Facebook.apiClient.fql_query(query, store_link);
 }
 
 function store_link(response) {
@@ -248,8 +248,15 @@ function store_link(response) {
     replicas.set('link', response);
 }
 
-link_template = tmpl.as_template([
+var link_image_template = {render: function(vars) {
+        if (!vars.image_urls) return '';
+        if (!vars.image_urls[0]) return '';
+        return '<img src="'+htmlescape(vars.image_urls[0])+'" height="64" width="64" style="float: left; clear: left; margin-right: 0.5em" />';
+    }};
+
+var link_template = tmpl.as_template([
     '<h6 class="uiStreamMessage">',
+    link_image_template,
     '<a href="', tmpl.v('url'), '" class="actorName">',tmpl.v('title'),'</a> ',
     autolinkify_var('owner_comment'),
     '</h6>',
