@@ -8,9 +8,10 @@ textarea { display: block }
 </head> <body>
 <a href="javascript:login()">log in to FB!</a>
 | <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out!</a>
-| <a href="javascript:retrieve_status_messages()">retrieve status messages</a>
+| <a href="javascript:FB.Connect.requireSession(retrieve_status_messages)">retrieve status messages</a>
 | <a href="javascript:display_status_messages()">display status messages</a>
-|  <a href="javascript:export_storage()">json export in popup</a>
+| <a href="javascript:export_storage()">json export in popup</a>
+| <a href="javascript:reset_storage()">erase all stored information</a>
 <textarea id="FQL" rows=3 cols=80>SELECT time, message, status_id from status where uid=1173721181</textarea>
 <button onclick="do_query()">run query »</button>
 <textarea id="output" rows=20 cols=80></textarea>
@@ -27,8 +28,12 @@ var knx_fb_api_key = "2a2806da8abe66693e14bbbcbe9c0c64";
 function onConnected() { output(["connected", FB.Connect.get_loggedInUser()]) }
 function onNotConnected() { output("notconnected") }
 
-function login() {
+$(function () {
   FB.init(knx_fb_api_key, "/xd_receiver.html", {"ifUserConnected" : onConnected, "ifUserNotConnected": onNotConnected});
+  display_status_messages();
+});
+
+function login() {
   FB.ensureInit( function () {
     FB.Connect.requireSession(function () { 
       output("got a session");
@@ -45,7 +50,7 @@ function do_query() {
 
 function output(response) {
     $('#output').val($('#output').val() + "\n" + $.toJSON(response));
-    if (console) console.log(response);
+    if (typeof console != 'undefined') console.log(response);
 }
 
 var status_messages;
@@ -53,25 +58,66 @@ var status_messages;
 function retrieve_status_messages() {
     var query = 'SELECT uid, time, message, status_id from status where uid=' + 
             FB.Connect.get_loggedInUser();
-    FB.Facebook.apiClient.fql_query(query, store_status_messages);
+    FB.Facebook.apiClient.fql_query(query, function (response) {store_status_messages(response); display_status_messages(); });
 }
 
 function store_status_messages(new_status_messages) {
+    if (!new_status_messages) return;
     status_messages = new_status_messages;
     get_local_storage().set('status_messages', $.toJSON(status_messages));
     output(["stored status_messages:", status_messages.length]);
 }
 
-var time_template = {render:function(vars){return ''+new Date(1000*vars.time)}};
+function displayDate(unix_epoch) {
+  var d = new Date(unix_epoch*1000);
+  var t = new Date();
+  var s = '';
+  var age = t.getTime() - d.getTime();
+  var age_d = Math.floor(age / (24*60*60*1000));
+  var age_w = Math.floor(age / (7*24*60*60*1000));
+  var age_y = t.getYear() - d.getYear();
+  var age_m = t.getMonth() - d.getMonth() + 12 * age_y;
+  if (age < 1000) {
+        s += ("right now");
+  } else if ((age >= 1000) && (age < 60*1000)) {
+        s += (Math.floor(age/1000) + " second");
+        if (age >= 2000) {s += ('s');}
+        s += (' ago');
+  } else if ((age >= 60*1000) && (age < 60*60*1000)) {
+        s += (Math.floor(age/(60*1000)) + " minute");
+        if (age >= 2*60*1000) {s += ('s');}
+        s += (' ago');
+  } else if ((age >= 60*60*1000) && (age < 24*60*60*1000)) {
+        s += (Math.floor(age/(60*60*1000)) + " hour");
+        if (age >= 2*60*60*1000) {s += ('s');}
+        s += (' ago');
+  } else if ((age >= 24*60*60*1000) && (age < 7*24*60*60*1000)) {
+        s += ((age_d >= 2) ? age_d + " days ago" : "yesterday");
+  } else if ((age >= 7*24*60*60*1000) && (age < 4*7*24*60*60*1000)) {
+        s += ((age_w >= 2) ? age_w + " weeks ago" : "last week");
+  } else if ((age >= 4*7*24*60*60*1000) && (age_y == 0)) {
+        s += ((age_m >= 2) ? age_m + " months ago" : "last month");
+  } else if (age_y > 0) {
+        s += ((age_y >= 2) ? age_y + " years ago" : "last year");
+  }
+  if (age >= 2*24*60*60*1000) {
+    s += (' on ' + d.toLocaleDateString());
+  } else {
+    s += (' at ' + d.toLocaleTimeString().toLowerCase());
+  }
+  return s;
+}
+
+var time_template = {render:function(vars){return displayDate(vars.time)}};
 
 var status_template = tmpl.as_template([
     '<h6 class="uiStreamMessage">',
-    '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'" class="actorName">',tmpl.v('uid'),'</a> ',
+    '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'" class="actorName">','You','</a> ',
     tmpl.v('message'),
     '</h6>',
-    '<div><span class="uiStreamSource">',
+    '<span class="uiStreamSource">',
     '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('status_id'),'">',
-    '<abbr title="',time_template,'" class="timestamp">',time_template,'</abbr></a></span></div>'
+    '<abbr title="',time_template,'" class="timestamp">',time_template,'</abbr></a></span>'
 ]);
 
 function render_status_message(message) {
@@ -80,9 +126,15 @@ function render_status_message(message) {
 
 function display_status_messages() {
     if (!status_messages) {
-        status_messages = $.evalJSON(get_local_storage().get('status_messages'));
+        var g = get_local_storage().get('status_messages');
+        if (g && g.length) {
+            status_messages = $.evalJSON(g);
+        }
     }
-    if (!status_messages) return;
+    if (!status_messages) {
+        $('.status_messages').html('<div class="error">No status messages are available right now.</div>');
+        return;
+    }
     var html = [];
     for (var ii = 0; ii < status_messages.length; ii++) {
         html.push(render_status_message(status_messages[ii]));
@@ -90,12 +142,20 @@ function display_status_messages() {
     $('.status_messages').html(html.join(''));                          
 }
 
+function reset_storage () {
+    get_local_storage().remove('status_messages')
+    if (status_messages) { status_messages = null; }
+    display_status_messages();
+}
 
 function export_storage () {
-    var popup = window.open('#', '_blank');
-    popup.document.open('text/plain');
-    popup.document.write(get_local_storage().get('status_messages')); 
-    popup.document.close();
+    var g = get_local_storage().get('status_messages');
+    if (g && g.length) {
+        var popup = window.open('#', '_blank');
+        popup.document.open('text/plain');
+        popup.document.write(g.replace(/\}\,\{/g , '},\n{')); 
+        popup.document.close();
+    }
 }
 
 </script>
@@ -145,12 +205,13 @@ text-decoration:none;
 .uiStreamSource {
 display: block;
 margin-top: -0.25em;
-margin-bottom: 1em;
+margin-bottom: 0.50em;
+}
+.error {
+color: red;
+margin: 1em;
+font-size: 15px;
 }
 </style>
-<h6 class="uiStreamMessage"><a href="http://www.facebook.com/scottfoxbeale" class="actorName">Scott Beale</a> Police Find Explosives in S.U.V. in Times Square  <a target="_blank" rel="nofollow" onmousedown="UntrustedLink.bootstrap($(this), &quot;4e77d&quot;, event);" href="http://nyti.ms/bOYijB">http://nyti.ms/bOYijB</a> /via @moth</h6>
-<span class="uiStreamSource"><a href="http://www.facebook.com/profile.php?id=502763541&amp;v=wall&amp;story_fbid=113637188671865"><abbr title="Sat, 01 May 2010 21:30:43 -0700" class="timestamp">27 minutes ago</abbr></a></span>
-<h6 class="uiStreamMessage uiStreamPassive"><a href="http://www.facebook.com/dweekly" class="passiveName">David E. Weekly</a> likes <a href="http://www.facebook.com/AquariusTheatre">Aquarius Theatre</a>, <a href="http://www.facebook.com/pages/Lexington-MA/Lexington-Christian-Academy/32605499250">Lexington Christian Academy</a>, <a href="http://www.facebook.com/pages/Joinville-Swim-Center/113142965393175">Joinville Swim Center</a> and <a href="http://www.facebook.com/pages/TallAnnacom/122709891077089">TallAnna.com</a>.</h6>
-<span class="uiStreamSource"><i class="img spritemap_icons sx_icons_like"></i><abbr title="Sat, 01 May 2010 20:57:14 -0700" class="timestamp">about an hour ago</abbr></span>
 </body>
 </html>
