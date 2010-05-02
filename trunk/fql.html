@@ -144,7 +144,7 @@ var replicas = {
         if (!(key in this._channels)) this._channels[key] = new Channel();
         this._channels[key].on_change(observer);
     }
-  ,remove: function(key) { // XXX this is not working!
+  ,remove: function(key) {
         var k = 'fql_' + key;
         output(['deleting', k]);
         get_local_storage().remove(k);
