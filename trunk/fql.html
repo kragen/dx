@@ -212,8 +212,8 @@ function autolinkify_var(v) {
     return {render:function(vars) { return autolinkify(htmlescape(vars[v])) }};
 }                  
 
-var relative_time_template = {render:function(vars){return displayDate(vars.time)}};
-var time_template = {render:function(vars){return ''+new Date(1000*vars.time)}};
+var relative_time_template = {render:function(vars){return displayDate(vars.time_t())}};
+var time_template = {render:function(vars){return ''+new Date(1000*vars.time_t())}};
 
 var status_template = tmpl.as_template([
     '<h6 class="uiStreamMessage">',
@@ -248,11 +248,21 @@ function store_link(response) {
     replicas.set('link', response);
 }
 
+link_template = tmpl.as_template([
+    '<h6 class="uiStreamMessage">',
+    '<a href="', tmpl.v('url'), '" class="actorName">',tmpl.v('title'),'</a> ',
+    autolinkify_var('owner_comment'),
+    '</h6>',
+    '<span class="uiStreamSource">',
+    '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('link_id'),'">',
+    '<abbr title="',time_template,'" class="timestamp">',relative_time_template,'</abbr></a></span>'
+]);
+
 function FQL_Link(obj) {
     $.extend(this, obj);
 }
 FQL_Link.prototype.render = function() {
-    return htmlescape(this.url) + '<br />';
+    return link_template.render(this);
 };
 FQL_Link.prototype.time_t = function() { return this.created_time };
 FQL_Link.prototype.matches = function(string) { return true };
