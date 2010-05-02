@@ -62,14 +62,16 @@ function store_status_messages(new_status_messages) {
     output(["stored status_messages:", status_messages.length]);
 }
 
+var time_template = {render:function(vars){return ''+new Date(1000*vars.time)}};
+
 var status_template = tmpl.as_template([
     '<h6 class="uiStreamMessage">',
-    '<a href="http://www.facebook.com/scottfoxbeale" class="actorName">Scott Beale</a> ',
+    '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'" class="actorName">',tmpl.v('uid'),'</a> ',
     tmpl.v('message'),
     '</h6>',
     '<div><span class="uiStreamSource">',
     '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('status_id'),'">',
-    '<abbr title="Sat, 01 May 2010 21:30:43 -0700" class="timestamp">27 minutes ago</abbr></a></span></div>'
+    '<abbr title="',time_template,'" class="timestamp">',time_template,'</abbr></a></span></div>'
 ]);
 
 function render_status_message(message) {
