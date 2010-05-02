@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+<head><title>FQL Disconnect</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+textarea { display: block }
+</style>
+</head> <body>
+<a href="javascript:login()">log in to FB!</a> <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out!</a>
+<textarea id="FQL" rows=3 cols=80>SELECT time, message from status where uid=1173721181</textarea>
+<button onclick="do_query()">run query »</button>
+<textarea id="output" rows=20 cols=80></textarea>
+<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script src="/jquery.json-2.2.min.js"></script>
+<script type="text/javascript">
+var knx_fb_api_key = "2a2806da8abe66693e14bbbcbe9c0c64";
+
+function onConnected() { output(["connected", FB.Connect.get_loggedInUser()]) }
+function onNotConnected() { output("notconnected") }
+
+function login() {
+  FB.init(knx_fb_api_key, "/xd_receiver.html", {"ifUserConnected" : onConnected, "ifUserNotConnected": onNotConnected});
+  FB.ensureInit( function () {
+    FB.Connect.requireSession(function () { 
+      output("got a session");
+    }, false);
+  });
+}
+
+function do_query() {
+    var o = $('#output');
+    var q = $('#FQL').val();
+    o.val(o.val() + "\n>>> " + q);
+    FB.Facebook.apiClient.fql_query(q, output);
+}
+
+function output(response) {
+    $('#output').val($('#output').val() + "\n" + $.toJSON(response));
+    if (console) console.log(response);
+}
+
+</script>
+</body>
+</html>
