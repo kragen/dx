@@ -236,43 +236,6 @@ FQL_Status.prototype.matches = function(string) {
     return -1 != this.message.toLowerCase().indexOf(string);
 };
 
-var posts = [];
-var posts_channel = new Channel();
-
-function update_posts() {
-    posts = [];
-    var status = replicas.get('status') || [];
-    for (var ii = 0; ii < status.length; ii++) {
-        posts.push(new FQL_Status(status[ii]));
-    }
-    posts.sort(function(a, b) {
-            return b.time_t() - a.time_t();
-    });
-    posts_channel.changed();
-}
-
-replicas.on_change('status', update_posts);
-replicas.on_change('link', update_posts);
-update_posts();
-
-function display_status_messages(filter) {
-    if (!filter) filter = '';
-
-    var html = [];
-    for (var ii = 0; ii < posts.length; ii++) {
-        var msg = posts[ii];
-        if (msg.matches(filter)) {
-            html.push(msg.render());
-        }
-    }
-    if (!html.length) {
-        html.push('<div class="error">No status messages found.</div>');
-    }
-
-    $('.status_messages').each(function(){ this.innerHTML = html.join('') });
-}
-posts_channel.on_change(display_status_messages);
-
 
 function retrieve_link() {
     var query = 'select link_id,owner,owner_comment,created_time,title,summary,url,image_urls from link where owner = ' +
@@ -315,6 +278,45 @@ function export_storage () {
     popup.document.write(JSON.stringify(g, undefined, 3));
     popup.document.close();
 }
+
+
+var posts = [];
+var posts_channel = new Channel();
+
+function update_posts() {
+    posts = [];
+    var status = replicas.get('status') || [];
+    for (var ii = 0; ii < status.length; ii++) {
+        posts.push(new FQL_Status(status[ii]));
+    }
+    posts.sort(function(a, b) {
+            return b.time_t() - a.time_t();
+    });
+    posts_channel.changed();
+}
+
+replicas.on_change('status', update_posts);
+replicas.on_change('link', update_posts);
+update_posts();
+
+function display_status_messages(filter) {
+    if (!filter) filter = '';
+
+    var html = [];
+    for (var ii = 0; ii < posts.length; ii++) {
+        var msg = posts[ii];
+        if (msg.matches(filter)) {
+            html.push(msg.render());
+        }
+    }
+    if (!html.length) {
+        html.push('<div class="error">No status messages found.</div>');
+    }
+
+    $('.status_messages').each(function(){ this.innerHTML = html.join('') });
+}
+posts_channel.on_change(display_status_messages);
+
 
 function do_search(self) {
     display_status_messages(self.value.toLowerCase());
