@@ -69,7 +69,7 @@ font-size: 15px;
 | <a href="javascript:FB.Connect.requireSession(retrieve_link)">retrieve links</a>
 | <a href="javascript:display_status_messages()">display status messages</a>
 | <a href="javascript:export_storage()">json export in popup</a>
-| <a href="javascript:reset_storage()">erase all stored information</a>
+| <a href="javascript:reset_storage()">delete local backup</a>
 <span>| <a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>
 <div class="devtools">
   <textarea id="FQL" rows=3 cols=80>SELECT time, message, status_id from status where uid=1173721181</textarea>
@@ -225,6 +225,12 @@ var status_template = tmpl.as_template([
     '<abbr title="',time_template,'" class="timestamp">',relative_time_template,'</abbr></a></span>'
 ]);
 
+function query_match(query, string) {
+    if (query === '') return true;
+    if (string === null) return false;
+    return -1 !== string.toLowerCase().indexOf(query);
+}
+
 function FQL_Status(obj) {
     $.extend(this, obj);
 }
@@ -233,7 +239,7 @@ FQL_Status.prototype.render = function() {
 };
 FQL_Status.prototype.time_t = function() { return this.time };
 FQL_Status.prototype.matches = function(string) {
-    return -1 != this.message.toLowerCase().indexOf(string);
+    return query_match(string, this.message);
 };
 
 
@@ -272,7 +278,12 @@ FQL_Link.prototype.render = function() {
     return link_template.render(this);
 };
 FQL_Link.prototype.time_t = function() { return this.created_time };
-FQL_Link.prototype.matches = function(string) { return true };
+FQL_Link.prototype.matches = function(query) {
+    return (query_match(query, this.owner_comment) ||
+            query_match(query, this.title) ||
+            query_match(query, this.summary) ||
+            query_match(query, this.url));
+};
 
 
 function reset_storage () {
