@@ -30,7 +30,7 @@ font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
 font-size:11px;
 text-align:left;
 }
-.uiStreamMessage {
+.uiStreamMessage, .UIIntentionalStory_Header {
 font-size:13px;
 font-weight:normal;
 margin: 0.5em 0 5px 0;
@@ -74,6 +74,7 @@ text-decoration:none;
 display: block;
 margin-top: -0.25em;
 margin-bottom: 0.50em;
+  clear: left;
 }
 .error {
 color: red;
@@ -94,6 +95,10 @@ font-size: 15px;
 .UIStoryAttachment_Media {
     float: left;
     padding-right: 10px;
+}
+.UIStoryAttachment_Media img {
+    max-width: 130px;
+    max-height: 130px;
 }
 .UIStoryAttachment_Title {
     font-weight: bold;
@@ -298,9 +303,9 @@ function autolinkify_var(v) {
 var relative_time_template = {render:function(vars){return displayDate(vars.time_t())}};
 var time_template = {render:function(vars){return ''+new Date(1000*vars.time_t())}};
 
-var username_template = {render: function() {
-        var users = replicas.get('user') || [{name: 'You'}];
-        return htmlescape(users[0].name);
+var you_link_template = {render: function() {
+        var users = replicas.get('user') || [{name: 'You', uid: 'unknown'}];
+        return '<a href="http://www.facebook.com/profile.php?id='+htmlescape(users[0].uid)+'" class="actorName">'+htmlescape(users[0].name)+'</a> ';
     }
 };
 
@@ -318,9 +323,10 @@ function store_status(new_status_messages) {
     replicas.set('status', new_status_messages);
 }
 
+
 var status_template = tmpl.as_template([
     '<h6 class="uiStreamMessage">',
-    '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'" class="actorName">',username_template,'</a> ',
+    you_link_template,
     autolinkify_var('message'),
     '</h6>',
     '<span class="uiStreamSource">',
@@ -356,15 +362,54 @@ function store_link(response) {
 var link_image_template = {render: function(vars) {
         if (!vars.image_urls) return '';
         if (!vars.image_urls[0]) return '';
-        return '<img src="'+htmlescape(vars.image_urls[0])+'" style="float: left; clear: left; margin-right: 0.5em; max-width: 130px; max-height: 130px" />';
+        return '<img src="'+htmlescape(vars.image_urls[0])+'" class="img"/>';
     }};
 
+function url_domain_template(varname) {
+    return {render: function(vars) {
+            var url = vars[varname];
+            return htmlescape(url); // XXX not done yet
+        }};
+}
+
 var link_template = tmpl.as_template([
-    '<h6 class="uiStreamMessage">',
-    link_image_template,
-    '<a href="', tmpl.v('url'), '" class="actorName">',tmpl.v('title'),'</a> ',
+    '<div class="UIIntentionalStory_Header">',
+    '<h3 class="UIIntentionalStory_Message">',
+    '<span class="UIIntentionalStory_Names">',
+    you_link_template,
+    '</span> ',
+    '<span class="UIStory_Message">',
     autolinkify_var('owner_comment'),
-    '</h6>',
+    '<br/><br/>',
+    '<a target="_blank" href="',tmpl.v('url'),'">',
+    '<span>',tmpl.v('url'),'</span>',
+    '</h3>',
+    '</div>',
+
+
+    '<div class="UIStoryAttachment">',
+
+    '<div class="UIStoryAttachment_Media UIStoryAttachment_MediaSingle">',
+     '<div class="UIMediaItem">',
+      '<a target="_blank" href="',tmpl.v('url'),'">',
+       '<div class="UIMediaItem_Wrapper">',
+        link_image_template,
+       '</div>',
+      '</a>',
+     '</div>',
+    '</div>',
+
+    '<div class="UIStoryAttachment_Info">',
+     '<div class="UIStoryAttachment_Title">',
+      '<a href="',tmpl.v('url'),'">',tmpl.v('title'),'</a>',
+     '</div>',
+     '<div class="UIStoryAttachment_Caption">',url_domain_template('url'),'</div>',
+     '<div class="UIStoryAttachment_Copy">',tmpl.v('summary'),'</div>',
+    '</div>',
+
+    '</div>',
+
+
     '<span class="uiStreamSource">',
     '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('link_id'),'">',
     '<abbr title="',time_template,'" class="timestamp">',relative_time_template,'</abbr></a></span>'
@@ -513,13 +558,6 @@ $(function () {
 });
 
 </script>
-<!--
-<div class="UIIntentionalStory_Header"><h3 data-ft='{"type":"msg"}' class="UIIntentionalStory_Message">
-                <span data-ft='{"type":"name"}' class="UIIntentionalStory_Names"><a href="http://www.facebook.com/kragen">Kragen Javier Sitaker</a>
-                </span><span class="UIStory_Message">I wrote this article early last year, and unfortunately I didn't notice that someone had translated it into Indonesian until just now. This is awesome!<br/><br/><a target="_blank" rel="nofollow" onmousedown='UntrustedLink.bootstrap($(this), "a1a29", event);' href="http://www.pasadon.com/2009/04/bagaimana-kabar-burung-dapat-menyebabkan-kematian/"><span>http://www.pasadon.com/2009/04/bagaimana</span><wbr/><span class="word_break"/><span>-kabar-burung-dapat-menyebabkan-kematian</span><wbr/><span class="word_break"/>/</a></span></h3></div>
-<div id="" data-ft='{"type":"attach"}' class="UIStoryAttachment"><div data-ft='{"type":"media"}' class="UIStoryAttachment_Media UIStoryAttachment_MediaSingle"><div class="UIMediaItem"><a rel="nofollow" onmousedown='UntrustedLink.bootstrap($(this), "a1a29", event);' style="" target="_blank" title="" id="" href="http://www.pasadon.com/2009/04/bagaimana-kabar-burung-dapat-menyebabkan-kematian/#comment-1533"><div class="UIMediaItem_Wrapper"><img src="http://external.ak.fbcdn.net/safe_image.php?d=9fa91ea76d3c698d3799e2687d4c27db&amp;w=130&amp;h=130&amp;url=http%3A%2F%2Fcanonical.org%2F%7Ekragen%2FTuskeegee_study_small.jpg" class="img"/></div></a></div></div><div class="UIStoryAttachment_Info"><div class="UIStoryAttachment_Title"><a rel="nofollow" onmousedown='UntrustedLink.bootstrap($(this), "a1a29", event);' style="" target="_blank" id="" href="http://www.pasadon.com/2009/04/bagaimana-kabar-burung-dapat-menyebabkan-kematian/#comment-1533">Bagaimana kabar burung dapat menyebabkan kematian | Pasadon</a></div><div class="UIStoryAttachment_Caption">www.pasadon.com</div><div class="UIStoryAttachment_Copy">Posting ini diterjemahkan secara bebas dari How False Rumors Can Cost Lives oleh Kragen. Saya pikir posting ini perlu dibaca oleh sebanyak mungkin orang, sehingga saya putuskan untuk menterjemahkannya  ...</div></div></div>
--->
-
 
 </body>
 </html>
