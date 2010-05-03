@@ -17,6 +17,7 @@ textarea { display: block }
     -webkit-border-radius: 6px;
     padding: 1em;
 }
+.logincontainer { margin-bottom: 11px }
 </style>
 
 <style>
@@ -120,12 +121,13 @@ browser until you delete it.
 None of this data ever gets sent to our server; it's all direct
 communication between your browser and Facebook.
 </p>
+<div class="logincontainer">
 <a class="login"
    href="javascript:FB.Connect.requireSession(retrieve_everything)">
      <img src="http://knx.to/i/trefoil_8bit.png" style="vertical-align: middle;" />
      Get My Stuff!
 </a>
-<br>
+</div>
 <div class="searchline show_only_when_posts_exist">
   Search: <input class="search" size="64" />
 </div>
@@ -133,7 +135,7 @@ communication between your browser and Facebook.
 <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out</a>
 <span class="show_only_when_posts_exist">
 | <a href="javascript:export_storage()">json export in popup</a>
-| <a href="javascript:reset_storage()">delete local backup</a>
+| <a href="javascript:reset_storage()">delete the backup copy stored in this browser</a>
 </span>
 <span>| <a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>
 </div>
