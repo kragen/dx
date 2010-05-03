@@ -82,6 +82,8 @@ D remove extra call to it in the initialization function
 
 - add a "post status to your wall" button
 
+- how well do we handle dates in the near future?
+
 - do automatic updates?
 
 - versioning
