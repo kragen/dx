@@ -1,0 +1,83 @@
+bD stick an FQL console into Disconnect
+
+- request extended permissions to read_stream (no)
+
+D write FQL to save a copy of all of the user's status messages
+
+D factor out the localStorage/globalStorage thing from knx.js
+
+D write some piece of code to display old status messages (now I am
+  wishing I had finished my template system rewrite, or that we'd
+  adopted MJT, already)
+
+D save the old status messages into local/globalStorage
+
+D write something to search the status messages
+
+- pull other kinds of data: notes? links?
+
+    - starting with links.
+
+        D `select link_id,owner,owner_comment,created_time,title,summary,url,image_urls from link where owner = 1173721181`
+
+        D make Link and Status classes implementing a "post protocol":
+          `.render() -> HTML`, `.time_t() -> int`, and
+          `.matches(string) -> bool`
+
+        D persist not the heterogeneous collection of posts, but the
+          FQL results.
+
+        D make a collection of posts that contains all currently known
+          posts, which updates when new queries finish.
+
+        D change search to run over the posts instead of the status
+          messages
+
+    - notes
+
+    - comments on above object ids?
+
+    - albums  -- very important for visual appeal of thumbs (and comments on photos)
+
+    - friendships
+
+    - photos -- mostly b/c we don't have a good way to back up. Tell people to save as .mht? really?
+
+D rename erase button
+
+D make search work for links
+
+D do the right search at page load time
+
+- make unified "download everything" button
+
+- make link template look like FB's
+
+- add_me: find out username, for use in templates
+
+- do something sensible with schemeless links
+
+- make export use a textarea?
+
+- add a "post status to your wall" button
+
+- do automatic updates?
+
+- fix date strings to be more useful
+
+- clear:left?
+
+- bold search string occurrences?
+
+- consider moving from localStorage to CouchDB a la
+  <http://edparcell.posterous.com/using-jquery-and-couchdb-to-build-a-simple-we>
+  or move to S3 using form POST to create short-lived files:
+  <http://developer.amazonwebservices.com/connect/entry.jspa?externalID=1434>
+
+- scoping storage: prefix keys in localStorage with a common prefix,
+  or store everything under a single key?
+
+- if we start getting traffic, we should consider a "send stats to
+  help the developers?" stage
+
+- add a uservoice link like the "Support" one on the news sidebar

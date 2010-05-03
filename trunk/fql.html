@@ -330,8 +330,8 @@ replicas.on_change('status', update_posts);
 replicas.on_change('link', update_posts);
 update_posts();
 
-function display_status_messages(filter) {
-    if (!filter) filter = '';
+function display_status_messages() {
+    var filter = $('.search').val();
 
     var html = [];
     for (var ii = 0; ii < posts.length; ii++) {
@@ -349,15 +349,13 @@ function display_status_messages(filter) {
 posts_channel.on_change(display_status_messages);
 
 
-function do_search(self) {
-    display_status_messages(self.value.toLowerCase());
-}
+var search_channel = new Channel();
+search_channel.on_change(display_status_messages);
 
 var search_to;
 function init_search() {
-    var that = this;
     if (!search_to) {
-        search_to = setTimeout(function() { search_to = undefined; do_search(that) }, 0);
+        search_to = setTimeout(function() { search_to = undefined; search_channel.changed() }, 0);
     }
 }
 
