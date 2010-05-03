@@ -248,7 +248,7 @@ var username_template = {render: function() {
 };
 
 
-/* status */
+/* status posts */
 
 function retrieve_status() {
     var query = 'SELECT uid, time, message, status_id from status where uid=' + 
@@ -283,7 +283,7 @@ FQL_Status.prototype.matches = function(string) {
 };
 
 
-/* links */
+/* link posts */
 
 function retrieve_link() {
     var query = 'select link_id,owner,owner_comment,created_time,title,summary,url,image_urls from link where owner = ' +
