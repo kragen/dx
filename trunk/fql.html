@@ -7,7 +7,7 @@ textarea { display: block }
 .devtools { display: none }
 .searchline { display: none }
 .login {
-    display: block;
+    display: inline-block;
     text-align: center;
     font-size: 2em;
     background-color: #eee;
@@ -77,10 +77,14 @@ font-size: 15px;
 
 </head> <body>
 
+<h1>Facebook Disconnect</h1>
+
+<p>
 <a class="login"
-href="javascript:FB.Connect.requireSession(retrieve_everything)">Download
+href="javascript:FB.Connect.requireSession(retrieve_everything)">Download</a>
 all your past Facebook links and statuses and make a searchable backup
-of them in your browser</a>
+of them in your browser.
+</p>
 
 <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out</a>
 | <a href="javascript:export_storage()">json export in popup</a>
