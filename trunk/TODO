@@ -59,7 +59,7 @@ D make unified "download everything" button
 
 D rename display_status_messages!
 
-- remove extra call to it in the initialization function
+D remove extra call to it in the initialization function
 
 - rename retrieve_status_messages
 
@@ -91,6 +91,11 @@ D rename display_status_messages!
 D clear:left
 
 - bold search string occurrences?
+
+- what if the owner description is null for a link? you get this:
+
+    > **apophenia: gender gap in perception of computer science** null  
+    > last year
 
 - consider moving from localStorage to CouchDB a la
   <http://edparcell.posterous.com/using-jquery-and-couchdb-to-build-a-simple-we>

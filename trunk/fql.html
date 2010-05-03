@@ -92,15 +92,6 @@ font-size: 15px;
 <script src="channel.js"></script>
 <script type="text/javascript">
 
-var knx_fb_api_key = "2a2806da8abe66693e14bbbcbe9c0c64";
-
-function onConnected() { output(["connected", FB.Connect.get_loggedInUser()]) }
-function onNotConnected() { output("notconnected") }
-
-$(function () {
-  FB.init(knx_fb_api_key, "/xd_receiver.html", {"ifUserConnected" : onConnected, "ifUserNotConnected": onNotConnected});
-});
-
 function login() {
   FB.ensureInit( function () {
     FB.Connect.requireSession(function () { 
@@ -344,8 +335,6 @@ posts_channel.on_change(function() {
     }
 });
 
-update_posts();
-
 function display_posts() {
     var filter = $('.search').val();
 
@@ -375,7 +364,18 @@ function init_search() {
     }
 }
 
+update_posts();
+
 $(function(){ $('.search').keyup(init_search).change(init_search) });
+
+var knx_fb_api_key = "2a2806da8abe66693e14bbbcbe9c0c64";
+
+function onConnected() { output(["connected", FB.Connect.get_loggedInUser()]) }
+function onNotConnected() { output("notconnected") }
+
+$(function () {
+  FB.init(knx_fb_api_key, "/xd_receiver.html", {"ifUserConnected" : onConnected, "ifUserNotConnected": onNotConnected});
+});
 
 </script>
 </body>
