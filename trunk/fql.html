@@ -286,7 +286,7 @@ FQL_Link.prototype.matches = function(query) {
 
 
 function retrieve_user() {
-    var query = 'select username, name from user where uid = ' + 
+    var query = 'select uid, username, name from user where uid = ' + 
         FB.Connect.get_loggedInUser();
     FB.Facebook.apiClient.fql_query(query, store_user);
 }
@@ -304,6 +304,7 @@ function retrieve_everything() {
 }
 
 function reset_storage () {
+    replicas.remove('user');
     replicas.remove('status');
     replicas.remove('link');
 }
@@ -312,6 +313,7 @@ function export_storage () {
     var g = {
       status: replicas.get('status')
       ,link: replicas.get('link')
+      ,user: replicas.get('user')
     };
 
     var popup = window.open('#', '_blank');
