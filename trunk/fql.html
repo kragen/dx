@@ -444,7 +444,7 @@ update_posts();
 
 $(function(){ $('.search').keyup(init_search).change(init_search) });
 
-var knx_fb_api_key = "2a2806da8abe66693e14bbbcbe9c0c64";
+var knx_fb_api_key = "2a2806da8abe66693e14bbbcbe9c0c64"; // when I use app id '120935017919365' instead, status messages don't work
 
 function onConnected() { output(["connected", FB.Connect.get_loggedInUser()]) }
 function onNotConnected() { output("notconnected") }
