@@ -57,7 +57,9 @@ D make unified "download everything" button
 
     D hide search by default
 
-- rename display_status_messages!
+D rename display_status_messages!
+
+- remove extra call to it in the initialization function
 
 - rename retrieve_status_messages
 

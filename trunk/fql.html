@@ -74,7 +74,7 @@ font-size: 15px;
 <a href="javascript:login()">log in to FB!</a>
 | <a href="javascript:FB.Connect.requireSession(retrieve_status_messages)">retrieve status messages</a>
 | <a href="javascript:FB.Connect.requireSession(retrieve_link)">retrieve links</a>
-| <a href="javascript:display_status_messages()">display status messages</a>
+| <a href="javascript:display_posts()">display status messages</a>
   <textarea id="FQL" rows=3 cols=80>SELECT time, message, status_id from status where uid=1173721181</textarea>
   <button onclick="do_query()">run query »</button>
   <textarea id="output" rows=20 cols=80></textarea>
@@ -99,7 +99,7 @@ function onNotConnected() { output("notconnected") }
 
 $(function () {
   FB.init(knx_fb_api_key, "/xd_receiver.html", {"ifUserConnected" : onConnected, "ifUserNotConnected": onNotConnected});
-  display_status_messages();
+  display_posts();
 });
 
 function login() {
@@ -347,7 +347,7 @@ posts_channel.on_change(function() {
 
 update_posts();
 
-function display_status_messages() {
+function display_posts() {
     var filter = $('.search').val();
 
     var html = [];
@@ -363,11 +363,11 @@ function display_status_messages() {
 
     $('.status_messages').each(function(){ this.innerHTML = html.join('') });
 }
-posts_channel.on_change(display_status_messages);
+posts_channel.on_change(display_posts);
 
 
 var search_channel = new Channel();
-search_channel.on_change(display_status_messages);
+search_channel.on_change(display_posts);
 
 var search_to;
 function init_search() {
