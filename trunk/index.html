@@ -121,13 +121,15 @@ communication between your browser and Facebook.
      Get My Stuff!
 </a>
 <br>
-<div class="searchline">
+<div class="searchline show_only_when_posts_exist">
   Search: <input class="search" size="64" />
 </div>
 <div>
 <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out</a>
+<span class="show_only_when_posts_exist">
 | <a href="javascript:export_storage()">json export in popup</a>
 | <a href="javascript:reset_storage()">delete local backup</a>
+</span>
 <span>| <a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>
 </div>
 </div>
@@ -442,9 +444,9 @@ replicas.channel('user').on_change(update_posts); // because it's used in some t
 
 posts_channel.on_change(function() {
     if (posts.length) {
-        $('.searchline').show();
+        $('.show_only_when_posts_exist').show();
     } else {
-        $('.searchline').hide();
+        $('.show_only_when_posts_exist').hide();
     }
 });
 
