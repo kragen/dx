@@ -120,3 +120,25 @@ D clear:left
 
 - what do we do if there is no localStorage etc. implementation
   available? We should provide some kind of error message.
+
+- feedback from watching Beatrice use it:
+
+    - the current big button doesn't look enough like a button
+
+    - the "log out" link (before you've logged in!) is distracting
+
+    - "I don't know what to search for"
+
+    - the JSON export doesn't work very well in Safari
+
+    - "What do I do with this?" (the JSON export)
+
+    - the search is "really nice and fast"
+
+    - "I don't want to reload the page because it'll take forever to get all that stuff"
+
+    - "it's really cool"
+
+    - "Statuses? Status messages."
+
+    - Use the standard big green download button!
