@@ -64,20 +64,21 @@ font-size: 15px;
 </style>
 
 </head> <body>
-<a href="javascript:login()">log in to FB!</a>
+<a href="javascript:FB.Connect.requireSession(retrieve_everything)">Download all your past Facebook links and statuses</a>
 | <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out!</a>
-| <a href="javascript:FB.Connect.requireSession(retrieve_status_messages)">retrieve status messages</a>
-| <a href="javascript:FB.Connect.requireSession(retrieve_link)">retrieve links</a>
-| <a href="javascript:display_status_messages()">display status messages</a>
 | <a href="javascript:export_storage()">json export in popup</a>
 | <a href="javascript:reset_storage()">delete local backup</a>
 <span>| <a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>
 <div class="devtools">
+<a href="javascript:login()">log in to FB!</a>
+| <a href="javascript:FB.Connect.requireSession(retrieve_status_messages)">retrieve status messages</a>
+| <a href="javascript:FB.Connect.requireSession(retrieve_link)">retrieve links</a>
+| <a href="javascript:display_status_messages()">display status messages</a>
   <textarea id="FQL" rows=3 cols=80>SELECT time, message, status_id from status where uid=1173721181</textarea>
   <button onclick="do_query()">run query »</button>
   <textarea id="output" rows=20 cols=80></textarea>
 </div>
-<div>
+<div class="searchline">
   Search: <input class="search" size="64" />
 </div>
 <div class="status_messages"></div>
@@ -286,6 +287,11 @@ FQL_Link.prototype.matches = function(query) {
             query_match(query, this.url));
 };
 
+
+function retrieve_everything() {
+    retrieve_status_messages();
+    retrieve_link();
+}
 
 function reset_storage () {
     replicas.remove('status');

@@ -51,6 +51,23 @@ D do the right search at page load time
 
 - make unified "download everything" button
 
+    D write function to ensure session and get both statuses and links
+
+    D hide most other buttons by default
+
+    - hide search by default
+
+- rename display_status_messages!
+
+- rename retrieve_status_messages
+
+- make "progress bar" with a list of all the data elements to get,
+  checkmarks by the ones obtained, spinners by those currently being
+  refreshed, maybe use dimming and strikethrough to indicate those not
+  yet implemented and/or not implementable
+
+- or at least have SOME kind of throbber
+
 - make link template look like FB's
 
 - refactor replicas.on_change(a, b) to replicas.channel(a).on_change(b)
@@ -64,6 +81,8 @@ D do the right search at page load time
 - add a "post status to your wall" button
 
 - do automatic updates?
+
+- versioning
 
 - fix date strings to be more useful
 
