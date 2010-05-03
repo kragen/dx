@@ -6,6 +6,17 @@
 textarea { display: block }
 .devtools { display: none }
 .searchline { display: none }
+.login {
+    display: block;
+    text-align: center;
+    font-size: 2em;
+    background-color: #eee;
+    border: 1px dotted #ccc;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    padding: 1em;
+}
 </style>
 
 <style>
@@ -65,8 +76,13 @@ font-size: 15px;
 </style>
 
 </head> <body>
-<a href="javascript:FB.Connect.requireSession(retrieve_everything)">Download all your past Facebook links and statuses</a>
-| <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out!</a>
+
+<a class="login"
+href="javascript:FB.Connect.requireSession(retrieve_everything)">Download
+all your past Facebook links and statuses and make a searchable backup
+of them in your browser</a>
+
+<a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out</a>
 | <a href="javascript:export_storage()">json export in popup</a>
 | <a href="javascript:reset_storage()">delete local backup</a>
 <span>| <a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>

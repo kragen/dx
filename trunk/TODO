@@ -59,6 +59,12 @@ D make unified "download everything" button
 
     D hide search by default
 
+- hide "log out" button when you're not logged in
+
+- hide "delete local backup" button when there is no local backup
+
+- hide "json export in popup" button when there's nothing to export
+
 D rename display_status_messages!
 
 D remove extra call to it in the initialization function
@@ -111,3 +117,6 @@ D clear:left
   help the developers?" stage
 
 - add a uservoice link like the "Support" one on the news sidebar
+
+- what do we do if there is no localStorage etc. implementation
+  available? We should provide some kind of error message.
