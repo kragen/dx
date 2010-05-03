@@ -53,6 +53,8 @@ D do the right search at page load time
 
 - make link template look like FB's
 
+- refactor replicas.on_change(a, b) to replicas.channel(a).on_change(b)
+
 - add_me: find out username, for use in templates
 
 - do something sensible with schemeless links
@@ -65,7 +67,7 @@ D do the right search at page load time
 
 - fix date strings to be more useful
 
-- clear:left?
+D clear:left
 
 - bold search string occurrences?
 

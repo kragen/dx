@@ -19,7 +19,8 @@ text-align:left;
 .uiStreamMessage {
 font-size:13px;
 font-weight:normal;
-margin:0 0 5px;
+margin: 0.5em 0 5px 0;
+clear: left;
 }
 .uiStreamMessage, .uiAttachmentTitle, .uiAttachmentDesc {
 word-wrap:break-word;
@@ -257,7 +258,7 @@ function store_link(response) {
 var link_image_template = {render: function(vars) {
         if (!vars.image_urls) return '';
         if (!vars.image_urls[0]) return '';
-        return '<img src="'+htmlescape(vars.image_urls[0])+'" height="64" width="64" style="float: left; clear: left; margin-right: 0.5em" />';
+        return '<img src="'+htmlescape(vars.image_urls[0])+'" style="float: left; clear: left; margin-right: 0.5em; max-width: 130px; max-height: 130px" />';
     }};
 
 var link_template = tmpl.as_template([
