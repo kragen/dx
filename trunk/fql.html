@@ -92,6 +92,9 @@ font-size: 15px;
 <script src="channel.js"></script>
 <script type="text/javascript">
 
+
+/* developer tools */
+
 function login() {
   FB.ensureInit( function () {
     FB.Connect.requireSession(function () { 
@@ -118,32 +121,44 @@ var replicas = {
   _channels: {}
   ,get: function(key) {
         var k = 'fql_' + key;
+
         if (window[k]) return window[k];
+
         var string = get_local_storage().get(k);
         if (string) {
             window[k] = JSON.parse(string);
             return window[k];
         }
+
         return undefined;
     }
+
   ,set: function(key, value) {
         var k = 'fql_' + key;
+
         window[k] = value;
+
         get_local_storage().set(k, JSON.stringify(value, undefined, 3));
         output(['stored', k, value.length]);
+
         if (key in this._channels) this._channels[key].changed();
     }
+
   ,on_change: function(key, observer) {
         if (!(key in this._channels)) this._channels[key] = new Channel();
         this._channels[key].on_change(observer);
     }
+
   ,remove: function(key) {
         var k = 'fql_' + key;
+
         output(['deleting', k]);
         get_local_storage().remove(k);
         output(['gone from local storage', k]);
+
         window[k] = undefined;  // Can't use `delete`, because in IE, "Object does not support this action"
         output(['gone from window', k]);
+
         if (key in this._channels) this._channels[key].changed();
         output(['notified of change', k]);
     }
