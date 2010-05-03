@@ -5,7 +5,8 @@
 <style>
 textarea { display: block }
 .devtools { display: none }
-.searchline { display: none; padding: 2em; }
+.searchline { padding: 2em; }
+.show_only_when_posts_exist { display: none } /* by default */
 .login {
     display: inline-block;
     text-align: center;
@@ -111,7 +112,9 @@ img {
 <div style="text-align: center;">
 <h1>Search My Stuff on Facebook</h1>
 <p>
-Click the button below to grab all the stuff you've ever posted on
+<span class="show_only_when_no_posts_exist">Click the button below to grab</span
+><span class="show_only_when_posts_exist">This app grabs</span
+> all the stuff you've ever posted on
 Facebook. It's just all of your past Facebook statuses and shared
 links so far. It will download a backup copy of your Stuff and let you
 Search it too. The backup copy will be stored on your computer in your
@@ -121,7 +124,7 @@ browser until you delete it.
 None of this data ever gets sent to our server; it's all direct
 communication between your browser and Facebook.
 </p>
-<div class="logincontainer">
+<div class="logincontainer show_only_when_no_posts_exist">
 <a class="login"
    href="javascript:FB.Connect.requireSession(retrieve_everything)">
      <img src="http://knx.to/i/trefoil_8bit.png" style="vertical-align: middle;" />
@@ -134,6 +137,7 @@ communication between your browser and Facebook.
 <div>
 <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out</a>
 <span class="show_only_when_posts_exist">
+| <a href="javascript:FB.Connect.requireSession(retrieve_everything)">update this backup copy</a>
 | <a href="javascript:export_storage()">json export in popup</a>
 | <a href="javascript:reset_storage()">delete the backup copy stored in this browser</a>
 </span>
@@ -451,8 +455,10 @@ replicas.channel('user').on_change(update_posts); // because it's used in some t
 
 posts_channel.on_change(function() {
     if (posts.length) {
+        $('.show_only_when_no_posts_exist').hide();
         $('.show_only_when_posts_exist').show();
     } else {
+        $('.show_only_when_no_posts_exist').show();
         $('.show_only_when_posts_exist').hide();
     }
 });
