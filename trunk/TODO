@@ -33,6 +33,8 @@ D write something to search the status messages
         D change search to run over the posts instead of the status
           messages
 
+        - make link template look like FB's
+
     - notes
 
     - comments on above object ids?
@@ -69,8 +71,6 @@ D rename retrieve_status_messages
   yet implemented and/or not implementable
 
 - or at least have SOME kind of throbber
-
-- make link template look like FB's
 
 D refactor replicas.on_change(a, b) to replicas.channel(a).on_change(b)
 
