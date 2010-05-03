@@ -99,7 +99,6 @@ function onNotConnected() { output("notconnected") }
 
 $(function () {
   FB.init(knx_fb_api_key, "/xd_receiver.html", {"ifUserConnected" : onConnected, "ifUserNotConnected": onNotConnected});
-  display_posts();
 });
 
 function login() {
