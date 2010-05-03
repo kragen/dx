@@ -208,9 +208,15 @@ function autolinkify_var(v) {
 var relative_time_template = {render:function(vars){return displayDate(vars.time_t())}};
 var time_template = {render:function(vars){return ''+new Date(1000*vars.time_t())}};
 
+var username_template = {render: function() {
+        var user = replicas.get('user')[0] || {name: 'You'};
+        return htmlescape(user.name);
+    }
+};
+
 var status_template = tmpl.as_template([
     '<h6 class="uiStreamMessage">',
-    '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'" class="actorName">','You','</a> ',
+    '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'" class="actorName">',username_template,'</a> ',
     autolinkify_var('message'),
     '</h6>',
     '<span class="uiStreamSource">',
@@ -279,7 +285,20 @@ FQL_Link.prototype.matches = function(query) {
 };
 
 
+function retrieve_user() {
+    var query = 'select username, name from user where uid = ' + 
+        FB.Connect.get_loggedInUser();
+    FB.Facebook.apiClient.fql_query(query, store_user);
+}
+
+function store_user(user) {
+    if (!user) return;
+    replicas.set('user', user);
+}
+
+
 function retrieve_everything() {
+    retrieve_user();
     retrieve_status();
     retrieve_link();
 }

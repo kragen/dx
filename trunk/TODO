@@ -61,7 +61,7 @@ D rename display_status_messages!
 
 D remove extra call to it in the initialization function
 
-- rename retrieve_status_messages
+D rename retrieve_status_messages
 
 - make "progress bar" with a list of all the data elements to get,
   checkmarks by the ones obtained, spinners by those currently being
@@ -74,7 +74,7 @@ D remove extra call to it in the initialization function
 
 - refactor replicas.on_change(a, b) to replicas.channel(a).on_change(b)
 
-- add_me: find out username, for use in templates
+D add_me: find out username, for use in templates
 
 - do something sensible with schemeless links
 
