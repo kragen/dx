@@ -224,8 +224,8 @@ var relative_time_template = {render:function(vars){return displayDate(vars.time
 var time_template = {render:function(vars){return ''+new Date(1000*vars.time_t())}};
 
 var username_template = {render: function() {
-        var user = replicas.get('user')[0] || {name: 'You'};
-        return htmlescape(user.name);
+        var users = replicas.get('user') || [{name: 'You'}];
+        return htmlescape(users[0].name);
     }
 };
 
@@ -362,6 +362,7 @@ function update_posts() {
 
 replicas.channel('status').on_change(update_posts);
 replicas.channel('link').on_change(update_posts);
+replicas.channel('user').on_change(update_posts); // because it's used in some templates.
 
 posts_channel.on_change(function() {
     if (posts.length) {
