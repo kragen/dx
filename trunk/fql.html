@@ -72,7 +72,7 @@ font-size: 15px;
 <span>| <a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>
 <div class="devtools">
 <a href="javascript:login()">log in to FB!</a>
-| <a href="javascript:FB.Connect.requireSession(retrieve_status_messages)">retrieve status messages</a>
+| <a href="javascript:FB.Connect.requireSession(retrieve_status)">retrieve status messages</a>
 | <a href="javascript:FB.Connect.requireSession(retrieve_link)">retrieve links</a>
 | <a href="javascript:display_posts()">display status messages</a>
   <textarea id="FQL" rows=3 cols=80>SELECT time, message, status_id from status where uid=1173721181</textarea>
@@ -150,13 +150,13 @@ var replicas = {
 };
 
 
-function retrieve_status_messages() {
+function retrieve_status() {
     var query = 'SELECT uid, time, message, status_id from status where uid=' + 
             FB.Connect.get_loggedInUser();
-    FB.Facebook.apiClient.fql_query(query, store_status_messages);
+    FB.Facebook.apiClient.fql_query(query, store_status);
 }
 
-function store_status_messages(new_status_messages) {
+function store_status(new_status_messages) {
     if (!new_status_messages) return;
     replicas.set('status', new_status_messages);
 }
@@ -280,7 +280,7 @@ FQL_Link.prototype.matches = function(query) {
 
 
 function retrieve_everything() {
-    retrieve_status_messages();
+    retrieve_status();
     retrieve_link();
 }
 
