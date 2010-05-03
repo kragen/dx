@@ -133,6 +133,7 @@ function output(response) {
 
 
 /* replication of FQL tables */
+
 var replicas = {
   _channels: {}
   ,get: function(key) {
@@ -181,15 +182,12 @@ var replicas = {
 };
 
 
-function retrieve_status() {
-    var query = 'SELECT uid, time, message, status_id from status where uid=' + 
-            FB.Connect.get_loggedInUser();
-    FB.Facebook.apiClient.fql_query(query, store_status);
-}
+/* stuff related to posts in the abstract */
 
-function store_status(new_status_messages) {
-    if (!new_status_messages) return;
-    replicas.set('status', new_status_messages);
+function query_match(query, string) {
+    if (query === '') return true;
+    if (string === null) return false;
+    return -1 !== string.toLowerCase().indexOf(query);
 }
 
 function displayDate(unix_epoch) {
@@ -245,6 +243,20 @@ var username_template = {render: function() {
     }
 };
 
+
+/* status */
+
+function retrieve_status() {
+    var query = 'SELECT uid, time, message, status_id from status where uid=' + 
+            FB.Connect.get_loggedInUser();
+    FB.Facebook.apiClient.fql_query(query, store_status);
+}
+
+function store_status(new_status_messages) {
+    if (!new_status_messages) return;
+    replicas.set('status', new_status_messages);
+}
+
 var status_template = tmpl.as_template([
     '<h6 class="uiStreamMessage">',
     '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'" class="actorName">',username_template,'</a> ',
@@ -254,12 +266,6 @@ var status_template = tmpl.as_template([
     '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('status_id'),'">',
     '<abbr title="',time_template,'" class="timestamp">',relative_time_template,'</abbr></a></span>'
 ]);
-
-function query_match(query, string) {
-    if (query === '') return true;
-    if (string === null) return false;
-    return -1 !== string.toLowerCase().indexOf(query);
-}
 
 function FQL_Status(obj) {
     $.extend(this, obj);
@@ -272,6 +278,8 @@ FQL_Status.prototype.matches = function(string) {
     return query_match(string, this.message);
 };
 
+
+/* links */
 
 function retrieve_link() {
     var query = 'select link_id,owner,owner_comment,created_time,title,summary,url,image_urls from link where owner = ' +
@@ -316,6 +324,8 @@ FQL_Link.prototype.matches = function(query) {
 };
 
 
+/* user, i.e. myself */
+
 function retrieve_user() {
     var query = 'select uid, username, name from user where uid = ' + 
         FB.Connect.get_loggedInUser();
@@ -327,6 +337,8 @@ function store_user(user) {
     replicas.set('user', user);
 }
 
+
+/* misc. UI functionality */
 
 function retrieve_everything() {
     retrieve_user();
@@ -353,6 +365,8 @@ function export_storage () {
     popup.document.close();
 }
 
+
+/* the collection of all posts */
 
 var posts = [];
 var posts_channel = new Channel();
@@ -407,6 +421,8 @@ function display_posts() {
 posts_channel.on_change(display_posts);
 
 
+/* interface to search UI */
+
 var search_channel = new Channel();
 search_channel.on_change(display_posts);
 
@@ -416,6 +432,9 @@ function init_search() {
         search_to = setTimeout(function() { search_to = undefined; search_channel.changed() }, 0);
     }
 }
+
+
+/* initialization */
 
 update_posts();
 
