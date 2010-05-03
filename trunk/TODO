@@ -49,13 +49,13 @@ D make search work for links
 
 D do the right search at page load time
 
-- make unified "download everything" button
+D make unified "download everything" button
 
     D write function to ensure session and get both statuses and links
 
     D hide most other buttons by default
 
-    - hide search by default
+    D hide search by default
 
 - rename display_status_messages!
 

@@ -5,6 +5,7 @@
 <style>
 textarea { display: block }
 .devtools { display: none }
+.searchline { display: none }
 </style>
 
 <style>
@@ -335,6 +336,15 @@ function update_posts() {
 
 replicas.on_change('status', update_posts);
 replicas.on_change('link', update_posts);
+
+posts_channel.on_change(function() {
+    if (posts.length) {
+        $('.searchline').show();
+    } else {
+        $('.searchline').hide();
+    }
+});
+
 update_posts();
 
 function display_status_messages() {
@@ -366,7 +376,7 @@ function init_search() {
     }
 }
 
-$(function(){ $('.search').keyup(init_search).change(init_search).focus() });
+$(function(){ $('.search').keyup(init_search).change(init_search) });
 
 </script>
 </body>
