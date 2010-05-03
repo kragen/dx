@@ -141,12 +141,7 @@ var replicas = {
         get_local_storage().set(k, JSON.stringify(value, undefined, 3));
         output(['stored', k, value.length]);
 
-        if (key in this._channels) this._channels[key].changed();
-    }
-
-  ,on_change: function(key, observer) {
-        if (!(key in this._channels)) this._channels[key] = new Channel();
-        this._channels[key].on_change(observer);
+        this.channel(key).changed();
     }
 
   ,remove: function(key) {
@@ -159,8 +154,13 @@ var replicas = {
         window[k] = undefined;  // Can't use `delete`, because in IE, "Object does not support this action"
         output(['gone from window', k]);
 
-        if (key in this._channels) this._channels[key].changed();
+        this.channel(key).changed();
         output(['notified of change', k]);
+    }
+
+  ,channel: function(key) {
+        if (!(key in this._channels)) this._channels[key] = new Channel();
+        return this._channels[key];
     }
 };
 
@@ -360,8 +360,8 @@ function update_posts() {
     posts_channel.changed();
 }
 
-replicas.on_change('status', update_posts);
-replicas.on_change('link', update_posts);
+replicas.channel('status').on_change(update_posts);
+replicas.channel('link').on_change(update_posts);
 
 posts_channel.on_change(function() {
     if (posts.length) {

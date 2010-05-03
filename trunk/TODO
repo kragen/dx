@@ -72,7 +72,7 @@ D rename retrieve_status_messages
 
 - make link template look like FB's
 
-- refactor replicas.on_change(a, b) to replicas.channel(a).on_change(b)
+D refactor replicas.on_change(a, b) to replicas.channel(a).on_change(b)
 
 D add_me: find out username, for use in templates
 
