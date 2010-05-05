@@ -6,7 +6,7 @@
 textarea { display: block }
 .devtools { display: none }
 .searchline { padding: 2em; }
-.show_only_when_posts_exist { display: none } /* by default */
+     .show_only_when_posts_exist, .show_only_when_logged_in, .show_only_when_posts_exist_or_logged_in { display: none } /* by default */
 .login {
     display: inline-block;
     text-align: center;
@@ -142,13 +142,20 @@ communication between your browser and Facebook.
   Search: <input class="search" size="64" />
 </div>
 <div>
+<span class="show_only_when_logged_in">
 <a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out</a>
+</span>
 <span class="show_only_when_posts_exist">
-| <a href="javascript:FB.Connect.requireSession(retrieve_everything)">update this backup copy</a>
+<span class="show_only_when_logged_in"
+>|</span>
+<a href="javascript:FB.Connect.requireSession(retrieve_everything)">update this backup copy</a>
 | <a href="javascript:export_storage()">json export in popup</a>
 | <a href="javascript:reset_storage()">delete the backup copy stored in this browser</a>
 </span>
-<span>| <a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>
+<span>
+<span class="show_only_when_posts_exist_or_logged_in"
+>|</span>
+<a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>
 </div>
 </div>
 
@@ -504,9 +511,13 @@ posts_channel.on_change(function() {
     if (posts.length) {
         $('.show_only_when_no_posts_exist').hide();
         $('.show_only_when_posts_exist').show();
+        $('.show_only_when_posts_exist_or_logged_in').show();
     } else {
         $('.show_only_when_no_posts_exist').show();
         $('.show_only_when_posts_exist').hide();
+        if (!FB.Connect || FB.Connect.get_loggedInUser() === null) {
+            $('.show_only_when_posts_exist_or_logged_in').hide();
+        }
     }
 });
 
@@ -541,6 +552,13 @@ function init_search() {
     }
 }
 
+function update_logged_in_status() {
+    if (FB.Connect.get_loggedInUser() !== null) {
+        $('.show_only_when_logged_in').show();
+        $('.show_only_when_posts_exist_or_logged_in').show();
+    }
+}
+
 
 /* initialization */
 
@@ -550,12 +568,13 @@ $(function(){ $('.search').keyup(init_search).change(init_search) });
 
 var knx_fb_api_key = "2a2806da8abe66693e14bbbcbe9c0c64"; // when I use app id '120935017919365' instead, status messages don't work
 
-function onConnected() { output(["connected", FB.Connect.get_loggedInUser()]) }
-function onNotConnected() { output("notconnected") }
+function onConnected() { output(["connected", FB.Connect.get_loggedInUser()]); update_logged_in_status() }
+function onNotConnected() { output("notconnected"); update_logged_in_status() }
 
 $(function () {
   FB.init(knx_fb_api_key, "/xd_receiver.html", {"ifUserConnected" : onConnected, "ifUserNotConnected": onNotConnected});
 });
+
 
 /* analytics */
 
@@ -586,6 +605,7 @@ function gaSSDSLoad (acct) {
 $(window).load(function() {
     gaSSDSLoad("UA-11388042-1");
 });
+
 
 /* user support */
 
