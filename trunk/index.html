@@ -6,7 +6,7 @@
 textarea { display: block }
 .devtools { display: none }
 .searchline { padding: 2em; }
-     .show_only_when_posts_exist, .show_only_when_logged_in, .show_only_when_posts_exist_or_logged_in { display: none } /* by default */
+.show_only_when_posts_exist, .show_only_when_logged_in { display: none } /* by default */
 .login {
     display: inline-block;
     text-align: center;
@@ -153,7 +153,8 @@ communication between your browser and Facebook.
 | <a href="javascript:reset_storage()">delete the backup copy stored in this browser</a>
 </span>
 <span>
-<span class="show_only_when_posts_exist_or_logged_in"
+<span class="show_only_when_no_posts_exist"><span class="show_only_when_logged_in"
+>|</span></span><span class="show_only_when_posts_exist"
 >|</span>
 <a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>
 </div>
@@ -511,13 +512,9 @@ posts_channel.on_change(function() {
     if (posts.length) {
         $('.show_only_when_no_posts_exist').hide();
         $('.show_only_when_posts_exist').show();
-        $('.show_only_when_posts_exist_or_logged_in').show();
     } else {
         $('.show_only_when_no_posts_exist').show();
         $('.show_only_when_posts_exist').hide();
-        if (!FB.Connect || FB.Connect.get_loggedInUser() === null) {
-            $('.show_only_when_posts_exist_or_logged_in').hide();
-        }
     }
 });
 
@@ -555,7 +552,6 @@ function init_search() {
 function update_logged_in_status() {
     if (FB.Connect.get_loggedInUser() !== null) {
         $('.show_only_when_logged_in').show();
-        $('.show_only_when_posts_exist_or_logged_in').show();
     }
 }
 
