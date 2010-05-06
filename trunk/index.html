@@ -97,10 +97,10 @@ font-size: 15px;
     max-width: 130px;
     max-height: 130px;
 }
-.UIStoryAttachment_Title {
+.link_bottom h6 {
     font-weight: bold;
 }
-.UIStoryAttachment_Caption, .UIStoryAttachment_Copy {
+.link_domain, .link_excerpt {
     color: #808080;
     padding-top: 3px;
 }
@@ -401,12 +401,12 @@ var link_template = tmpl.as_template([
      '</div>',
     '</div>',
 
-    '<div class="UIStoryAttachment_Info">',
-     '<div class="UIStoryAttachment_Title">',
+    '<div>',
+     '<h6>',
       '<a href="',tmpl.v('url'),'">',tmpl.v('title'),'</a>',
-     '</div>',
-     '<div class="UIStoryAttachment_Caption">',url_domain_template('url'),'</div>',
-     '<div class="UIStoryAttachment_Copy">',tmpl.v('summary'),'</div>',
+     '</h6>',
+     '<div class="link_domain">',url_domain_template('url'),'</div>',
+     '<div class="link_excerpt">',tmpl.v('summary'),'</div>',
     '</div>',
 
     '</div>',
