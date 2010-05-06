@@ -155,9 +155,9 @@ D clear:left
 
 - Items from Yelena chat:
 
-    - add ability to remove dev tools
+    D add ability to remove dev tools
 
-    - remove “no search results found” when nothing to search. also, "no stuff found"
+    D remove “no search results found” when nothing to search. also, "no stuff found"
 
     - simplify CSS
 

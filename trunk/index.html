@@ -531,8 +531,8 @@ function display_posts() {
             html.push(msg.render());
         }
     }
-    if (!html.length) {
-        html.push('<div class="error">No status messages found.</div>');
+    if (posts.length && !html.length) {
+        html.push('<div class="error">No stuff found for your query, <b>'+htmlescape(filter)+'</b>.</div>');
     }
 
     $('.posts').each(function(){ this.innerHTML = html.join('') });
