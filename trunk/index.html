@@ -24,7 +24,18 @@ h1#logo > img { vertical-align: middle; }
 .green { color: #282; }
 .blue { color: #228; }
 .normal { font-weight: normal; }
+.topbar {
+    text-align: right;
+    padding: 0.1em 0em;
+    border-bottom: 1px solid #CCC;
+    background-color: #EFEFEF;
+    margin-bottom: 1em;
+}
+.topbar > * {font-size: 75%; padding-right:.75em;}
+body { margin: 0 }
+.posts, .heading-material { margin: 0.5em }
 </style>
+
 <style>
 /* from Facebook */
 body {
@@ -114,6 +125,8 @@ img {
 </style>
 </head>
 <body>
+<div class="topbar show_only_when_logged_in"><a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out of Facebook</a></div>
+<div class="heading-material">
 <div style="position: relative;">
 <h1 id="logo"><img src="http://knx.to/i/trefoil_8bit.png" /> <span class="red">Search</span><span class="green">My</span><span class="red">Stuff</span> <span class="blue normal">on Facebook</span></h1>
 <div class="logincontainer show_only_when_no_posts_exist">
@@ -146,18 +159,12 @@ Click here to bring the backup up to date.</a>
   Search: <input class="search" size="64" />
 </div>
 <div>
-<span class="show_only_when_logged_in">
-<a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out</a>
-</span>
 <span class="show_only_when_posts_exist">
-<span class="show_only_when_logged_in"
->|</span>
 <a href="javascript:export_storage()">json export in popup</a>
 | <a href="javascript:reset_storage()">delete the backup copy stored in this browser</a>
 </span>
 <span>
-<span class="show_only_when_no_posts_exist"><span class="show_only_when_logged_in"
->|</span></span><span class="show_only_when_posts_exist"
+<span class="show_only_when_posts_exist"
 >|</span>
 <a href="#" onclick="$('.devtools').toggle();$('.devtoolsshow').toggle(); return false"
 ><span class="devtoolsshow">show</span
@@ -176,6 +183,7 @@ Click here to bring the backup up to date.</a>
   <textarea id="output" rows=20 cols=80></textarea>
 </div>
 <p>
+</div>
 <hr />
 <div class="posts"></div>
 <div class="fql_link"></div>
