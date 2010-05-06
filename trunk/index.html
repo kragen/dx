@@ -153,6 +153,7 @@ img { border: 0 none }
       <a href="javascript:login()">log in to FB!</a>
       | <a href="javascript:FB.Connect.requireSession(retrieve_status)">retrieve status messages</a>
       | <a href="javascript:FB.Connect.requireSession(retrieve_link)">retrieve links</a>
+      | <a href="javascript:FB.Connect.requireSession(retrieve_note)">retrieve notes</a>
       | <a href="javascript:display_posts()">display status messages</a>
       <textarea id="FQL" rows=3 cols=80>SELECT time, message, status_id from status where uid=1173721181</textarea>
       <button onclick="do_query()">run query »</button>
@@ -162,7 +163,6 @@ img { border: 0 none }
   </div>
   <hr />
   <div class="posts"></div>
-  <div class="fql_link"></div>
 
   <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US" type="text/javascript"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
@@ -422,6 +422,44 @@ FQL_Link.prototype.matches = function(query) {
 };
 
 
+/* note posts */
+
+function retrieve_note() {
+    var query = 'select uid, note_id, created_time, updated_time, content, title from note where uid = ' +
+        FB.Connect.get_loggedInUser();
+    FB.Facebook.apiClient.fql_query(query, store_note);
+}
+
+function store_note(response) {
+    if (!response) return;
+    replicas.set('note', response);
+}
+
+var note_template = tmpl.as_template([
+    '<div>',
+    you_link_template,
+    '<h2>', tmpl.v('title'), '</h2>',
+    autolinkify_var('content'),
+    '</div>',
+
+    '<span class="permalink">',
+    '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('link_id'),'">',
+    '<abbr title="',time_template,'" class="timestamp">',relative_time_template,'</abbr></a></span>'
+]);
+
+function FQL_Note(obj) {
+    $.extend(this, obj);
+}
+FQL_Note.prototype.render = function() {
+    return note_template.render(this);
+};
+FQL_Note.prototype.time_t = function() { return this.created_time };
+FQL_Note.prototype.matches = function(query) {
+    return (query_match(query, this.content) ||
+            query_match(query, this.title));
+};
+
+
 /* user, i.e. myself */
 
 function retrieve_user() {
@@ -455,6 +493,7 @@ function retrieve_everything() {
     retrieve_user();
     retrieve_status();
     retrieve_link();
+    retrieve_note();
     timestamp_backup();
 }
 
@@ -462,6 +501,7 @@ function reset_storage () {
     replicas.remove('user');
     replicas.remove('status');
     replicas.remove('link');
+    replicas.remove('note');
     replicas.remove('timestamp');
 }
 
@@ -470,6 +510,7 @@ function export_storage () {
       status: replicas.get('status')
       ,link: replicas.get('link')
       ,user: replicas.get('user')
+      ,note: replicas.get('note')
       ,timestamp: replicas.get('timestamp')
     };
 
@@ -498,6 +539,11 @@ function update_posts() {
         posts.push(new FQL_Link(link[ii]));
     }
 
+    var note = replicas.get('note') || [];
+    for (var ii = 0; ii < note.length; ii++) {
+        posts.push(new FQL_Note(note[ii]));
+    }
+
     posts.sort(function(a, b) {
             return b.time_t() - a.time_t();
     });
@@ -506,6 +552,7 @@ function update_posts() {
 
 replicas.channel('status').on_change(update_posts);
 replicas.channel('link').on_change(update_posts);
+replicas.channel('note').on_change(update_posts);
 replicas.channel('user').on_change(update_posts); // because it's used in some templates.
 
 posts_channel.on_change(function() {
