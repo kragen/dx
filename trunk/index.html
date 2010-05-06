@@ -316,12 +316,14 @@ function register_post_type(post_type) { post_types.push(post_type) }
 function Table(obj) {
     $.extend(this, obj);
 }
+Table.prototype.fql = function() {
+    return ('select '+this.fields.join(',')
+            +' from '+this.table_name
+            +' where '+this.uid_field+' = '+FB.Connect.get_loggedInUser());
+};
 Table.prototype.retrieve = function() {
-    var query = ('select '+this.fields.join(',')
-                 +' from '+this.table_name
-                 +' where '+this.uid_field+' = '+FB.Connect.get_loggedInUser());
     var that = this;
-    FB.Facebook.apiClient.fql_query(query, function(response) {
+    FB.Facebook.apiClient.fql_query(this.fql(), function(response) {
             if (!response) return;
             replicas.set(that.table_name, response);
         });
