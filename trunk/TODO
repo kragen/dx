@@ -33,7 +33,7 @@ D write something to search the status messages
         D change search to run over the posts instead of the status
           messages
 
-        - make link template look like FB's
+        D make link template look like FB's
 
     - notes
 
@@ -59,11 +59,11 @@ D make unified "download everything" button
 
     D hide search by default
 
-- hide "log out" button when you're not logged in
+D hide "log out" button when you're not logged in
 
-- hide "delete local backup" button when there is no local backup
+D hide "delete local backup" button when there is no local backup
 
-- hide "json export in popup" button when there's nothing to export
+D hide "json export in popup" button when there's nothing to export
 
 D rename display_status_messages!
 
@@ -123,9 +123,9 @@ D clear:left
 
 - feedback from watching Beatrice use it:
 
-    - the current big button doesn't look enough like a button
+    - the current big button doesn't look enough like a button (fixed)
 
-    - the "log out" link (before you've logged in!) is distracting
+    - the "log out" link (before you've logged in!) is distracting (fixed)
 
     - "I don't know what to search for"
 
@@ -135,10 +135,45 @@ D clear:left
 
     - the search is "really nice and fast"
 
-    - "I don't want to reload the page because it'll take forever to get all that stuff"
+    - "I don't want to reload the page because it'll take forever to get all that stuff" (hopefully fixed)
 
     - "it's really cool"
 
     - "Statuses? Status messages."
 
     - Use the standard big green download button!
+
+    - spinner while loading? 
+
+- BUG: we saw a hang with firefox 3.6.3, win xp ushankar: I made sure
+      knx.to, facebook and googleapis are allowed in noscript. We
+      failed hard, over 15 min of remote IM support, I could find no
+      sign of any correct behavior except that the show-tools link
+      worked; and that "no statuses" would appear after page load
+
+- Analytics: make sure to bring over the analytics code, at least!
+
+- Items from Yelena chat:
+
+    - Fix copy. See files for latest.
+
+    - Add title graphic.
+
+    - add ability to remove dev tools
+
+    - remove “no search results found” when nothing to search. also, "no stuff found"
+
+    - add "Congratulations! Here is your stuff as of XXX, X days ago, and
+      it has been backed up! Click here to bring that backup up to date."
+      or "No backup yet."
+
+    - change logout link to "log out of facebook"
+
+    - put logout button in upper right-hand corner
+
+    - add copyright notices
+
+    - how to clarify that your backup is available even if you aren’t
+      logged in to Facebook?
+
+    - simplify CSS
