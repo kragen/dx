@@ -1,10 +1,18 @@
-- make autoformat (autolinkify) turn \n into <br>
+D make autoformat (autolinkify) turn \n into <br>
+
+- there's some kind of bug where sometimes all the post timestamps
+  display as the timestamp of the backup! Not cool.
+
+- refactor post types to remove duplicated code
 
 - do something sensible with schemeless links
 
+    - for me to repro this, Rohit needs to give me his JSON and I need
+      to be able to restore it
+
 - actually extract the domain name from links
 
-- add another post type: notes
+D add another post type: notes
 
 - back up friendships too
 
@@ -32,7 +40,7 @@ X how well do we handle dates in the near future? They all get
 
 - versioning: prevent loss of old backups when new ones are loaded
 
-- fix date strings to be more useful
+- fix date strings to be more useful (not just "last year")
 
 - bold search string occurrences?
 
