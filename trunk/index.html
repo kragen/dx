@@ -338,18 +338,6 @@ Table.prototype.as_objects = function() {
 
 /* status posts */
 
-function retrieve_status() {
-    var query = 'SELECT uid, time, message, status_id from status where uid=' + 
-            FB.Connect.get_loggedInUser();
-    FB.Facebook.apiClient.fql_query(query, store_status);
-}
-
-function store_status(new_status_messages) {
-    if (!new_status_messages) return;
-    replicas.set('status', new_status_messages);
-}
-
-
 var status_template = tmpl.as_template([
     '<h2 class="status">',
     you_link_template,
@@ -370,6 +358,17 @@ FQL_Status.prototype.time_t = function() { return this.time };
 FQL_Status.prototype.matches = function(string) {
     return query_match(string, this.message);
 };
+
+var status_type = new Table({
+      fields: ['uid', 'status_id', 'time', 'source', 'message']
+      ,table_name: 'status'
+      ,object_type: FQL_Status
+      ,uid_field: 'uid'
+    });
+
+register_post_type(status_type);
+
+function retrieve_status() { return status_type.retrieve() }
 
 
 /* link posts */
@@ -521,7 +520,6 @@ display_timestamp();
 
 function retrieve_everything() {
     retrieve_user();
-    retrieve_status();
     for (var ii = 0; ii < post_types.length; ii++) {
         post_types[ii].retrieve();
     }
@@ -531,7 +529,6 @@ function retrieve_everything() {
 
 function reset_storage () {
     replicas.remove('user');
-    replicas.remove('status');
     for (var ii = 0; ii < post_types.length; ii++) {
         replicas.remove(post_types[ii].table_name);
     }
@@ -541,8 +538,7 @@ function reset_storage () {
 
 function export_storage () {
     var g = {
-      status: replicas.get('status')
-      ,user: replicas.get('user')
+      user: replicas.get('user')
       ,note: replicas.get('note')
       ,timestamp: replicas.get('timestamp')
     };
@@ -566,11 +562,6 @@ var posts_channel = new Channel();
 function update_posts() {
     posts = [];
 
-    var status = replicas.get('status') || [];
-    for (var ii = 0; ii < status.length; ii++) {
-        posts.push(new FQL_Status(status[ii]));
-    }
-
     for (var ii = 0; ii < post_types.length; ii++) {
         posts = posts.concat(post_types[ii].as_objects());
     }
@@ -586,7 +577,6 @@ function update_posts() {
     posts_channel.changed();
 }
 
-replicas.channel('status').on_change(update_posts);
 (function() {
     for (var ii = 0; ii < post_types.length; ii++) {
         replicas.channel(post_types[ii].table_name).on_change(update_posts);
