@@ -55,91 +55,46 @@ body { margin: 0 }
 </style>
 
 <style type="text/css">
-/* from Facebook */
+/* styles for Facebook look and feel */
 body {
-    color:#333333;
-    direction:ltr;
-    font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
-    font-size:13px;
-    text-align:left;
+    color: #333333;
+    font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+    font-size: 13px;
 }
 .status, .link_top {
-    font-size:13px;
-    font-weight:normal;
+    font-size: 13px;
+    font-weight: normal;
     margin: 0.5em 0 5px 0;
     clear: left;
 }
-.status {
-    word-wrap:break-word;
-}
-h1, h2, h3, h4, h5, h6 {
-    color:#333333;
-    margin:0;
-    padding:0;
-}
-h1 {
-    font-size: 26px;
-}
-h2, h3, h4, h5, h6 {
-    font-size:13px;
-}
-.actorName, .status .passiveName {
-    font-weight:bold;
-}
+.status { word-wrap: break-word }
+h1, h2, h3 {color: #333333; margin: 0; padding: 0 }
+h1 { font-size: 26px }
+h2, h3 { font-size: 13px }
+.person_name { font-weight: bold }
 a {
-    color:#3B5998;
-    cursor:pointer;
-    outline-style:none;
-    text-decoration:none;
+    color: #3B5998;
+    cursor: pointer;
+    outline-style: none;
+    text-decoration: none;
 }
-abbr {
-    border-bottom:medium none;
-}
-.uiStreamSource, .uiStreamSource a {
-    color:#808080;
-}
-a {
-    color:#3B5998;
-    cursor:pointer;
-    text-decoration:none;
-}
-.uiStreamSource {
+abbr { border-bottom: medium none }
+.permalink, .permalink a { color:#808080 }
+.permalink {
     display: block;
     margin-top: -0.25em;
     margin-bottom: 0.50em;
     clear: left;
 }
-.error {
-    color: red;
-    margin: 1em;
-    font-size: 15px;
-}
+.error { color: red; margin: 1em; font-size: 15px }
 
-.link_top_inside {
-    font-size: 13px;
-    font-weight: normal;
-}
-.link_bottom {
-    margin: 6px 0 5px;
-}
-.link_image {
-    float: left;
-    padding-right: 10px;
-}
-.link_image img {
-    max-width: 130px;
-    max-height: 130px;
-}
-.link_bottom h6 {
-    font-weight: bold;
-}
-.link_domain, .link_excerpt {
-    color: #808080;
-    padding-top: 3px;
-}
-img {
-    border: 0 none;
-}
+.link_top_inside { font-size: 13px; font-weight: normal }
+.link_bottom { margin: 6px 0 5px }
+.link_image { float: left; padding-right: 10px }
+.link_image img { max-width: 130px; max-height: 130px }
+.link_bottom h3 { font-weight: bold }
+.link_domain, .link_excerpt { color: #808080; padding-top: 3px }
+img { border: 0 none }
 </style>
 </head>
 <body>
@@ -348,7 +303,7 @@ var time_template = {render:function(vars){return ''+new Date(1000*vars.time_t()
 
 var you_link_template = {render: function() {
         var users = replicas.get('user') || [{name: 'You', uid: 'unknown'}];
-        return '<a href="http://www.facebook.com/profile.php?id='+htmlescape(users[0].uid)+'" class="actorName">'+htmlescape(users[0].name)+'</a> ';
+        return '<a href="http://www.facebook.com/profile.php?id='+htmlescape(users[0].uid)+'" class="person_name">'+htmlescape(users[0].name)+'</a> ';
     }
 };
 
@@ -368,11 +323,11 @@ function store_status(new_status_messages) {
 
 
 var status_template = tmpl.as_template([
-    '<h6 class="status">',
+    '<h2 class="status">',
     you_link_template,
     autolinkify_var('message'),
-    '</h6>',
-    '<span class="uiStreamSource">',
+    '</h2>',
+    '<span class="permalink">',
     '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('status_id'),'">',
     '<abbr title="',time_template,'" class="timestamp">',relative_time_template,'</abbr></a></span>'
 ]);
@@ -417,10 +372,10 @@ function url_domain_template(varname) {
 
 var link_template = tmpl.as_template([
     '<div class="link_top">',
-    '<h3 class="link_top_inside">',
+    '<h2 class="link_top_inside">',
     you_link_template,
     autolinkify_var('owner_comment'),
-    '</h3>',
+    '</h2>',
     '</div>',
 
 
@@ -437,9 +392,9 @@ var link_template = tmpl.as_template([
     '</div>',
 
     '<div>',
-     '<h6>',
+     '<h3>',
       '<a href="',tmpl.v('url'),'">',tmpl.v('title'),'</a>',
-     '</h6>',
+     '</h3>',
      '<div class="link_domain">',url_domain_template('url'),'</div>',
      '<div class="link_excerpt">',tmpl.v('summary'),'</div>',
     '</div>',
@@ -447,7 +402,7 @@ var link_template = tmpl.as_template([
     '</div>',
 
 
-    '<span class="uiStreamSource">',
+    '<span class="permalink">',
     '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('link_id'),'">',
     '<abbr title="',time_template,'" class="timestamp">',relative_time_template,'</abbr></a></span>'
 ]);
