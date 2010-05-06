@@ -289,13 +289,13 @@ function displayDate(unix_epoch) {
   return s;
 }
 
-function autolinkify(text) {
+function autoformat(text) {
     return (''+text).replace(/http:\/\/[^\s<>"]*[^\s<>".,]/g,
                              '<a href="$&" target="_blank">$&</a>');
 }
 
-function autolinkify_var(v) {
-    return {render:function(vars) { return autolinkify(htmlescape(vars[v])) }};
+function autoformat_var(v) {
+    return {render:function(vars) { return autoformat(htmlescape(vars[v])) }};
 }                  
 
 var relative_time_template = {render:function(vars){return displayDate(vars.time_t())}};
@@ -325,7 +325,7 @@ function store_status(new_status_messages) {
 var status_template = tmpl.as_template([
     '<h2 class="status">',
     you_link_template,
-    autolinkify_var('message'),
+    autoformat_var('message'),
     '</h2>',
     '<span class="permalink">',
     '<a href="http://www.facebook.com/profile.php?id=',tmpl.v('uid'),'&amp;v=wall&amp;story_fbid=',tmpl.v('status_id'),'">',
@@ -374,7 +374,7 @@ var link_template = tmpl.as_template([
     '<div class="link_top">',
     '<h2 class="link_top_inside">',
     you_link_template,
-    autolinkify_var('owner_comment'),
+    autoformat_var('owner_comment'),
     '</h2>',
     '</div>',
 
@@ -439,7 +439,7 @@ var note_template = tmpl.as_template([
     '<div>',
     you_link_template,
     '<h2>', tmpl.v('title'), '</h2>',
-    autolinkify_var('content'),
+    autoformat_var('content'),
     '</div>',
 
     '<span class="permalink">',
