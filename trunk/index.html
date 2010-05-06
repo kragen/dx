@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
-<head><title>SearchMyStuff on Facebook</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <head><title>SearchMyStuff on Facebook</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <style>
 textarea { display: block }
 .devtools { display: none }
@@ -39,25 +39,25 @@ body { margin: 0 }
 <style>
 /* from Facebook */
 body {
-color:#333333;
-direction:ltr;
-font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
-font-size:13px;
-text-align:left;
+    color:#333333;
+    direction:ltr;
+    font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+    font-size:13px;
+    text-align:left;
 }
 .status, .link_top {
-font-size:13px;
-font-weight:normal;
-margin: 0.5em 0 5px 0;
-clear: left;
+    font-size:13px;
+    font-weight:normal;
+    margin: 0.5em 0 5px 0;
+    clear: left;
 }
 .status {
-word-wrap:break-word;
+    word-wrap:break-word;
 }
 h1, h2, h3, h4, h5, h6 {
-color:#333333;
-margin:0;
-padding:0;
+    color:#333333;
+    margin:0;
+    padding:0;
 }
 h1 {
     font-size: 26px;
@@ -66,35 +66,35 @@ h2, h3, h4, h5, h6 {
     font-size:13px;
 }
 .actorName, .status .passiveName {
-font-weight:bold;
+    font-weight:bold;
 }
 a {
-color:#3B5998;
-cursor:pointer;
-outline-style:none;
-text-decoration:none;
+    color:#3B5998;
+    cursor:pointer;
+    outline-style:none;
+    text-decoration:none;
 }
 abbr {
-border-bottom:medium none;
+    border-bottom:medium none;
 }
 .uiStreamSource, .uiStreamSource a {
-color:#808080;
+    color:#808080;
 }
 a {
-color:#3B5998;
-cursor:pointer;
-text-decoration:none;
+    color:#3B5998;
+    cursor:pointer;
+    text-decoration:none;
 }
 .uiStreamSource {
-display: block;
-margin-top: -0.25em;
-margin-bottom: 0.50em;
-  clear: left;
+    display: block;
+    margin-top: -0.25em;
+    margin-bottom: 0.50em;
+    clear: left;
 }
 .error {
-color: red;
-margin: 1em;
-font-size: 15px;
+    color: red;
+    margin: 1em;
+    font-size: 15px;
 }
 
 .link_top_inside {
@@ -125,75 +125,78 @@ img {
 </style>
 </head>
 <body>
-<div class="topbar show_only_when_logged_in"><a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out of Facebook</a></div>
-<div class="heading-material">
-<div style="position: relative;">
-<h1 id="logo"><img src="http://knx.to/i/trefoil_8bit.png" /> <span class="red">Search</span><span class="green">My</span><span class="red">Stuff</span> <span class="blue normal">on Facebook</span></h1>
-<div class="logincontainer show_only_when_no_posts_exist">
-<a class="login"
-   href="javascript:FB.Connect.requireSession(retrieve_everything)">
-     <img src="http://knx.to/i/trefoil_8bit.png" style="vertical-align: middle;" />
-     Get My Stuff!
-</a>
-</div>
-<div>
-<p class="show_only_when_no_posts_exist"> 
-This app grabs all the stuff you’ve ever posted on Facebook. 
-(Though, it’s limited to all of your past Facebook status messages and shared links so far.)</p>
-<p class="show_only_when_no_posts_exist">
-It will download a backup copy of your Stuff (this usually takes
-less than five seconds) and let you Search it too. The backup copy
-will be stored on your computer in your browser until you delete it.</p>
-<p class="show_only_when_no_posts_exist">Note: None of this data ever gets sent to our server. In fact, we don’t even have a server because  it’s all direct
-communication between your browser and Facebook.</p>
-<p class="show_only_when_posts_exist">
-Congratulations! Here is your stuff as of <span class="timestamp">your
-last backup</span>, and it has been backed up in this browser, so
-you’ll have it even if you’re offline or Facebook suspends your
-account. <a href="javascript:FB.Connect.requireSession(retrieve_everything)">
-Click here to bring the backup up to date.</a>
-</p>
-</div>
+  <div class="topbar show_only_when_logged_in"><a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out of Facebook</a></div>
+  <div class="heading-material">
+    <div style="position: relative;">
+      <h1 id="logo"><img src="http://knx.to/i/trefoil_8bit.png" /> <span class="red">Search</span><span class="green">My</span><span class="red">Stuff</span> <span class="blue normal">on Facebook</span></h1>
+      <div class="logincontainer show_only_when_no_posts_exist">
+        <a class="login"
+           href="javascript:FB.Connect.requireSession(retrieve_everything)">
+          <img src="http://knx.to/i/trefoil_8bit.png" style="vertical-align: middle;" />
+          Get My Stuff!
+        </a>
+      </div>
+      <div>
+        <p class="show_only_when_no_posts_exist"> 
+          This app grabs all the stuff you’ve ever posted on Facebook. 
+          (Though, it’s limited to all of your past Facebook status messages and shared links so far.)</p>
 
-<div class="searchline show_only_when_posts_exist">
-  Search: <input class="search" size="64" />
-</div>
-<div>
-<span class="show_only_when_posts_exist">
-<a href="javascript:export_storage()">json export in popup</a>
-| <a href="javascript:reset_storage()">delete the backup copy stored in this browser</a>
-</span>
-<span>
-<span class="show_only_when_posts_exist"
->|</span>
-<a href="#" onclick="$('.devtools').toggle();$('.devtoolsshow').toggle(); return false"
-><span class="devtoolsshow">show</span
-><span class="devtools">hide</span
-> dev tools</a></span>
-</div>
-</div>
+        <p class="show_only_when_no_posts_exist">
+          It will download a backup copy of your Stuff (this usually takes
+          less than five seconds) and let you Search it too. The backup copy
+          will be stored on your computer in your browser until you delete it.</p>
 
-<div class="devtools">
-<a href="javascript:login()">log in to FB!</a>
-| <a href="javascript:FB.Connect.requireSession(retrieve_status)">retrieve status messages</a>
-| <a href="javascript:FB.Connect.requireSession(retrieve_link)">retrieve links</a>
-| <a href="javascript:display_posts()">display status messages</a>
-  <textarea id="FQL" rows=3 cols=80>SELECT time, message, status_id from status where uid=1173721181</textarea>
-  <button onclick="do_query()">run query »</button>
-  <textarea id="output" rows=20 cols=80></textarea>
-</div>
-<p>
-</div>
-<hr />
-<div class="posts"></div>
-<div class="fql_link"></div>
+        <p class="show_only_when_no_posts_exist">Note: None of this data ever gets sent to our server. In fact, we don’t even have a server because  it’s all direct
+          communication between your browser and Facebook.</p>
 
-<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US" type="text/javascript"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
-<script src="json2.js"></script>
-<script src="local_storage.js"></script>
-<script src="karnak.js"></script>
-<script src="channel.js"></script>
+        <p class="show_only_when_posts_exist">
+          Congratulations! Here is your stuff as of <span class="timestamp">your
+            last backup</span>, and it has been backed up in this browser, so
+          you’ll have it even if you’re offline or Facebook suspends your
+          account. <a href="javascript:FB.Connect.requireSession(retrieve_everything)">
+            Click here to bring the backup up to date.</a>
+        </p>
+      </div>
+
+      <div class="searchline show_only_when_posts_exist">
+        Search: <input class="search" size="64" />
+      </div>
+      <div>
+        <span class="show_only_when_posts_exist">
+          <a href="javascript:export_storage()">json export in popup</a>
+          | <a href="javascript:reset_storage()">delete the backup copy stored in this browser</a>
+        </span>
+        <span>
+          <span class="show_only_when_posts_exist"
+                >|</span>
+          <a href="#" onclick="$('.devtools').toggle();$('.devtoolsshow').toggle(); return false"
+             ><span class="devtoolsshow">show</span
+             ><span class="devtools">hide</span
+             > dev tools</a></span>
+      </div>
+    </div>
+
+    <div class="devtools">
+      <a href="javascript:login()">log in to FB!</a>
+      | <a href="javascript:FB.Connect.requireSession(retrieve_status)">retrieve status messages</a>
+      | <a href="javascript:FB.Connect.requireSession(retrieve_link)">retrieve links</a>
+      | <a href="javascript:display_posts()">display status messages</a>
+      <textarea id="FQL" rows=3 cols=80>SELECT time, message, status_id from status where uid=1173721181</textarea>
+      <button onclick="do_query()">run query »</button>
+      <textarea id="output" rows=20 cols=80></textarea>
+    </div>
+    <p>
+  </div>
+  <hr />
+  <div class="posts"></div>
+  <div class="fql_link"></div>
+
+  <script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+  <script src="json2.js"></script>
+  <script src="local_storage.js"></script>
+  <script src="karnak.js"></script>
+  <script src="channel.js"></script>
 <script type="text/javascript">
 
 
