@@ -165,7 +165,7 @@ D clear:left
 
     D simplify CSS
 
-    - add "Congratulations! Here is your stuff as of XXX, X days ago, and
+    D add "Congratulations! Here is your stuff as of XXX, X days ago, and
       it has been backed up! Click here to bring that backup up to date."
       or "No backup yet."
 

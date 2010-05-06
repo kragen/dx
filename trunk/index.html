@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
-<head><title>Search My Stuff on Facebook</title>
+<head><title>SearchMyStuff on Facebook</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <style>
 textarea { display: block }
@@ -18,16 +18,20 @@ textarea { display: block }
     -webkit-border-radius: 6px;
     padding: 1em;
 }
-.logincontainer { margin-bottom: 11px }
+.logincontainer { margin: 2em; float: right; }
+h1#logo > img { vertical-align: middle; }
+.red { color: #822; }
+.green { color: #282; }
+.blue { color: #228; }
+.normal { font-weight: normal; }
 </style>
-
 <style>
 /* from Facebook */
 body {
 color:#333333;
 direction:ltr;
 font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
-font-size:11px;
+font-size:13px;
 text-align:left;
 }
 .status, .link_top {
@@ -108,38 +112,10 @@ img {
     border: 0 none;
 }
 </style>
-
-</head> <body>
-
-<div style="text-align: center;">
-<h1>Search My Stuff on Facebook</h1>
-
-<p>
-<span class="show_only_when_no_posts_exist">Click the button below to grab</span
-><span class="show_only_when_posts_exist">This app grabs</span
-> all the stuff you've ever posted on
-Facebook. It's just all of your past Facebook status messages and shared
-links so far. It will download a backup copy of your Stuff 
-(this usually takes less than five seconds)
-and let you
-Search it too. The backup copy will be stored on your computer in your
-browser until you delete it.
-</p>
-
-<p>
-None of this data ever gets sent to our server; it's all direct
-communication between your browser and Facebook.
-</p>
-
-<p class="show_only_when_posts_exist">
-Congratulations! Here is your stuff as of <span class="timestamp">your
-last backup</span>, and it has been backed up in this browser, so
-you'll have it even if you're offline or Facebook deletes your
-account! <a href="javascript:FB.Connect.requireSession(retrieve_everything)"
->Click here to bring the backup up to date.</a>
-</p>
-
-
+</head>
+<body>
+<div style="position: relative;">
+<h1 id="logo"><img src="http://knx.to/i/trefoil_8bit.png" /> <span class="red">Search</span><span class="green">My</span><span class="red">Stuff</span> <span class="blue normal">on Facebook</span></h1>
 <div class="logincontainer show_only_when_no_posts_exist">
 <a class="login"
    href="javascript:FB.Connect.requireSession(retrieve_everything)">
@@ -147,6 +123,25 @@ account! <a href="javascript:FB.Connect.requireSession(retrieve_everything)"
      Get My Stuff!
 </a>
 </div>
+<div>
+<p class="show_only_when_no_posts_exist"> 
+This app grabs all the stuff you’ve ever posted on Facebook. 
+(Though, it’s limited to all of your past Facebook status messages and shared links so far.)</p>
+<p class="show_only_when_no_posts_exist">
+It will download a backup copy of your Stuff (this usually takes
+less than five seconds) and let you Search it too. The backup copy
+will be stored on your computer in your browser until you delete it.</p>
+<p class="show_only_when_no_posts_exist">Note: None of this data ever gets sent to our server. In fact, we don’t even have a server because  it’s all direct
+communication between your browser and Facebook.</p>
+<p class="show_only_when_posts_exist">
+Congratulations! Here is your stuff as of <span class="timestamp">your
+last backup</span>, and it has been backed up in this browser, so
+you’ll have it even if you’re offline or Facebook suspends your
+account. <a href="javascript:FB.Connect.requireSession(retrieve_everything)">
+Click here to bring the backup up to date.</a>
+</p>
+</div>
+
 <div class="searchline show_only_when_posts_exist">
   Search: <input class="search" size="64" />
 </div>
