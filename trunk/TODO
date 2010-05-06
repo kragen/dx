@@ -1,10 +1,10 @@
 D make autoformat (autolinkify) turn \n into <br>
 
-- there's some kind of bug where sometimes all the post timestamps
+D there's some kind of bug where sometimes all the post timestamps
   display as the timestamp of the backup! Not cool. (CSS namespace
   collision: '.timestamp' used for both.)
 
-- refactor post types to remove duplicated code
+D refactor post types to remove duplicated code
 
 - do something sensible with schemeless links
 
