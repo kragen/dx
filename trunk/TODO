@@ -8,6 +8,8 @@ D refactor post types to remove duplicated code
 
 D rename for now to "Disco Bridge".
 
+D rename to "Disco Explorer"
+
 - do something sensible with schemeless links
 
     - for me to repro this, Rohit needs to give me his JSON and I need
