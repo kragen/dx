@@ -113,6 +113,7 @@ img {
 
 <div style="text-align: center;">
 <h1>Search My Stuff on Facebook</h1>
+
 <p>
 <span class="show_only_when_no_posts_exist">Click the button below to grab</span
 ><span class="show_only_when_posts_exist">This app grabs</span
@@ -124,10 +125,21 @@ and let you
 Search it too. The backup copy will be stored on your computer in your
 browser until you delete it.
 </p>
+
 <p>
 None of this data ever gets sent to our server; it's all direct
 communication between your browser and Facebook.
 </p>
+
+<p class="show_only_when_posts_exist">
+Congratulations! Here is your stuff as of <span class="timestamp">your
+last backup</span>, and it has been backed up in this browser, so
+you'll have it even if you're offline or Facebook deletes your
+account! <a href="javascript:FB.Connect.requireSession(retrieve_everything)"
+>Click here to bring the backup up to date.</a>
+</p>
+
+
 <div class="logincontainer show_only_when_no_posts_exist">
 <a class="login"
    href="javascript:FB.Connect.requireSession(retrieve_everything)">
@@ -145,8 +157,7 @@ communication between your browser and Facebook.
 <span class="show_only_when_posts_exist">
 <span class="show_only_when_logged_in"
 >|</span>
-<a href="javascript:FB.Connect.requireSession(retrieve_everything)">update this backup copy</a>
-| <a href="javascript:export_storage()">json export in popup</a>
+<a href="javascript:export_storage()">json export in popup</a>
 | <a href="javascript:reset_storage()">delete the backup copy stored in this browser</a>
 </span>
 <span>
@@ -451,6 +462,15 @@ function store_user(user) {
 function timestamp_backup() {
     replicas.set('timestamp', new Date().getTime()/1000);
 }
+
+function display_timestamp() {
+    var timestamp = replicas.get('timestamp');
+    if (timestamp) $('.timestamp').text(displayDate(timestamp));
+}
+
+replicas.channel('timestamp').on_change(display_timestamp);
+setInterval(display_timestamp, 60*1000);
+display_timestamp();
 
 function retrieve_everything() {
     retrieve_user();
