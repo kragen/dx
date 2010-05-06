@@ -489,16 +489,15 @@ function retrieve_note() { return note_type.retrieve() }
 
 /* user, i.e. myself */
 
-function retrieve_user() {
-    var query = 'select uid, username, name from user where uid = ' + 
-        FB.Connect.get_loggedInUser();
-    FB.Facebook.apiClient.fql_query(query, store_user);
-}
+var user_type = new Table({
+      fields: ['uid', 'username', 'name']
+      ,table_name: 'user'
+      // no object_type because user is not a kind of post.
+      ,uid_field: 'uid'
+    });
 
-function store_user(user) {
-    if (!user) return;
-    replicas.set('user', user);
-}
+function retrieve_user() { return user_type.retrieve() }
+
 
 
 /* misc. UI functionality */
