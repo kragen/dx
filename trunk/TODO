@@ -90,7 +90,8 @@ D add_me: find out username, for use in templates
 
 - add a "post status to your wall" button
 
-- how well do we handle dates in the near future?
+X how well do we handle dates in the near future? They all get
+  displayed as "right now", which is suboptimal but okay.
 
 - do automatic updates?
 
@@ -169,17 +170,18 @@ D clear:left
       it has been backed up! Click here to bring that backup up to date."
       or "No backup yet."
 
-    - change logout link to "log out of facebook"
+    D change logout link to "log out of facebook"
 
-    - put logout button in upper right-hand corner
+    D put logout button in upper right-hand corner
 
     - add copyright notices
 
-    - how to clarify that your backup is available even if you aren’t
-      logged in to Facebook?
+    X how to clarify that your backup is available even if you aren’t
+      logged in to Facebook? (Maybe we have this covered now.)
 
-    - Fix copy. See files for latest.
+    X Fix copy. See files for latest. (Rohit has revised it;
+      presumably he's happy with it.)
 
-    - Add title graphic.
+    X Add title graphic. (??)
 
     - simplify CSS more
