@@ -448,16 +448,22 @@ function store_user(user) {
 
 /* misc. UI functionality */
 
+function timestamp_backup() {
+    replicas.set('timestamp', new Date().getTime()/1000);
+}
+
 function retrieve_everything() {
     retrieve_user();
     retrieve_status();
     retrieve_link();
+    timestamp_backup();
 }
 
 function reset_storage () {
     replicas.remove('user');
     replicas.remove('status');
     replicas.remove('link');
+    replicas.remove('timestamp');
 }
 
 function export_storage () {
@@ -465,6 +471,7 @@ function export_storage () {
       status: replicas.get('status')
       ,link: replicas.get('link')
       ,user: replicas.get('user')
+      ,timestamp: replicas.get('timestamp')
     };
 
     var popup = window.open('#', '_blank');

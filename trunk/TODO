@@ -163,7 +163,7 @@ D clear:left
 
     D remove “no search results found” when nothing to search. also, "no stuff found"
 
-    - simplify CSS
+    D simplify CSS
 
     - add "Congratulations! Here is your stuff as of XXX, X days ago, and
       it has been backed up! Click here to bring that backup up to date."
@@ -181,3 +181,5 @@ D clear:left
     - Fix copy. See files for latest.
 
     - Add title graphic.
+
+    - simplify CSS more
