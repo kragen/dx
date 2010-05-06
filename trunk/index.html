@@ -490,7 +490,21 @@ function retrieve_note() { return note_type.retrieve() }
 /* user, i.e. myself */
 
 var user_type = new Table({
-      fields: ['uid', 'username', 'name']
+
+      fields: ['uid', 'first_name', 'middle_name', 'last_name', 'name', 
+               'pic_small', 'pic_big', 'pic_square', 'pic', 'affiliations', 
+               'profile_update_time', 'timezone', 'religion', 'birthday', 
+               'birthday_date', 'sex', 'hometown_location', 'meeting_sex',
+               'meeting_for', 'relationship_status', 'significant_other_id',
+               'political', 'current_location', 'activities', 'interests', 
+               'is_app_user', 'music', 'tv', 'movies', 'books', 'quotes', 
+               'about_me', 'hs_info', 'education_history', 'work_history', 
+               'notes_count', 'wall_count', 'status', 'has_added_app', 
+               'online_presence', 'locale', 'proxied_email', 'profile_url', 
+               'email_hashes', 'pic_small_with_logo', 'pic_big_with_logo',
+               'pic_square_with_logo', 'pic_with_logo', 'allowed_restrictions', 
+               'verified', 'profile_blurb', 'family', 'username', 'website', 
+               'is_blocked', 'contact_email', 'email']
       ,table_name: 'user'
       // no object_type because user is not a kind of post.
       ,uid_field: 'uid'
