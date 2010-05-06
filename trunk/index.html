@@ -489,6 +489,44 @@ register_post_type(note_type);
 function retrieve_note() { return note_type.retrieve() }
 
 
+/* albums */
+
+var album_template = tmpl.as_template([
+    '<div>',
+    you_link_template,
+    ' updated the photo album "',tmpl.v('name'),'"',
+
+    '<span class="permalink">',
+    '<a href="',tmpl.v('link'),'">',
+    '<abbr title="',time_template,'" class="timestamp">',relative_time_template,'</abbr></a></span>',
+    '</div>'
+]);
+
+function FQL_Album(obj) {
+    $.extend(this, obj);
+}
+FQL_Album.prototype.render = function() {
+    return album_template.render(this);
+};
+FQL_Album.prototype.time_t = function() { return this.modified_major }
+FQL_Album.prototype.matches = function(query) {
+    return (query_match(query, this.name) ||
+            query_match(query, this.description));
+};
+
+var album_type = new Table({
+      fields: ['aid', 'owner', 'cover_pid', 'name', 'created', 'modified', 
+               'description', 'location', 'size', 'link', 'visible', 
+               'modified_major', 'edit_link', 'type', 'object_id',
+               'can_upload']
+      ,table_name: 'album'
+      ,object_type: FQL_Album
+      ,uid_field: 'owner'
+    });
+
+register_post_type(album_type);
+
+
 /* user, i.e. myself */
 
 var user_type = new Table({
