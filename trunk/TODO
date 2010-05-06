@@ -6,6 +6,8 @@ D there's some kind of bug where sometimes all the post timestamps
 
 D refactor post types to remove duplicated code
 
+D rename for now to "Disco Bridge".
+
 - do something sensible with schemeless links
 
     - for me to repro this, Rohit needs to give me his JSON and I need
@@ -14,6 +16,8 @@ D refactor post types to remove duplicated code
 - actually extract the domain name from links
 
 D add another post type: notes
+
+- come up with a better name
 
 - back up friendships too
 
