@@ -446,23 +446,10 @@ var link_type = new Table({
 
 register_post_type(link_type);
 
-function retrieve_link() {
-    return link_type.retrieve();
-}
+function retrieve_link() { return link_type.retrieve() }
 
 
 /* note posts */
-
-function retrieve_note() {
-    var query = 'select uid, note_id, created_time, updated_time, content, title from note where uid = ' +
-        FB.Connect.get_loggedInUser();
-    FB.Facebook.apiClient.fql_query(query, store_note);
-}
-
-function store_note(response) {
-    if (!response) return;
-    replicas.set('note', response);
-}
 
 var note_template = tmpl.as_template([
     '<div>',
@@ -487,6 +474,17 @@ FQL_Note.prototype.matches = function(query) {
     return (query_match(query, this.content) ||
             query_match(query, this.title));
 };
+
+var note_type = new Table({
+      fields: ['uid', ' note_id', ' created_time', ' updated_time', ' content', ' title']
+      ,table_name: 'note'
+      ,object_type: FQL_Note
+      ,uid_field: 'uid'
+    });
+
+register_post_type(note_type);
+
+function retrieve_note() { return note_type.retrieve() }
 
 
 /* user, i.e. myself */
@@ -523,7 +521,6 @@ function retrieve_everything() {
     for (var ii = 0; ii < post_types.length; ii++) {
         post_types[ii].retrieve();
     }
-    retrieve_note();
     timestamp_backup();
 }
 
@@ -532,14 +529,12 @@ function reset_storage () {
     for (var ii = 0; ii < post_types.length; ii++) {
         replicas.remove(post_types[ii].table_name);
     }
-    replicas.remove('note');
     replicas.remove('timestamp');
 }
 
 function export_storage () {
     var g = {
       user: replicas.get('user')
-      ,note: replicas.get('note')
       ,timestamp: replicas.get('timestamp')
     };
     for (var ii = 0; ii < post_types.length; ii++) {
@@ -566,11 +561,6 @@ function update_posts() {
         posts = posts.concat(post_types[ii].as_objects());
     }
 
-    var note = replicas.get('note') || [];
-    for (var ii = 0; ii < note.length; ii++) {
-        posts.push(new FQL_Note(note[ii]));
-    }
-
     posts.sort(function(a, b) {
             return b.time_t() - a.time_t();
     });
@@ -582,7 +572,6 @@ function update_posts() {
         replicas.channel(post_types[ii].table_name).on_change(update_posts);
     }
 })();
-replicas.channel('note').on_change(update_posts);
 replicas.channel('user').on_change(update_posts); // because it's used in some templates.
 
 posts_channel.on_change(function() {
