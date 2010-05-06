@@ -30,13 +30,13 @@ font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
 font-size:11px;
 text-align:left;
 }
-.uiStreamMessage, .link_top {
+.status, .link_top {
 font-size:13px;
 font-weight:normal;
 margin: 0.5em 0 5px 0;
 clear: left;
 }
-.uiStreamMessage, .uiAttachmentTitle, .uiAttachmentDesc {
+.status {
 word-wrap:break-word;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -50,7 +50,7 @@ h1 {
 h2, h3, h4, h5, h6 {
     font-size:13px;
 }
-.actorName, .uiStreamMessage .passiveName {
+.actorName, .status .passiveName {
 font-weight:bold;
 }
 a {
@@ -62,7 +62,7 @@ text-decoration:none;
 abbr {
 border-bottom:medium none;
 }
-uiAttachmentDesc, .uiStreamPassive, .uiStreamSource, .uiStreamSource a {
+.uiStreamSource, .uiStreamSource a {
 color:#808080;
 }
 a {
@@ -333,7 +333,7 @@ function store_status(new_status_messages) {
 
 
 var status_template = tmpl.as_template([
-    '<h6 class="uiStreamMessage">',
+    '<h6 class="status">',
     you_link_template,
     autolinkify_var('message'),
     '</h6>',
