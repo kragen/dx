@@ -310,6 +310,31 @@ var you_link_template = {render: function() {
     }
 };
 
+var post_types = [];
+function register_post_type(post_type) { post_types.push(post_type) }
+
+function Table(obj) {
+    $.extend(this, obj);
+}
+Table.prototype.retrieve = function() {
+    var query = ('select '+this.fields.join(',')
+                 +' from '+this.table_name
+                 +' where '+this.uid_field+' = '+FB.Connect.get_loggedInUser());
+    var that = this;
+    FB.Facebook.apiClient.fql_query(query, function(response) {
+            if (!response) return;
+            replicas.set(that.table_name, response);
+        });
+};
+Table.prototype.as_objects = function() {
+    var rv = [];
+    var rows = replicas.get(this.table_name) || [];
+    for (var ii = 0; ii < rows.length; ii++) {
+        rv.push(new this.object_type(rows[ii]));
+    }
+    return rv;
+};
+
 
 /* status posts */
 
@@ -348,17 +373,6 @@ FQL_Status.prototype.matches = function(string) {
 
 
 /* link posts */
-
-function retrieve_link() {
-    var query = 'select link_id,owner,owner_comment,created_time,title,summary,url,image_urls from link where owner = ' +
-        FB.Connect.get_loggedInUser();
-    FB.Facebook.apiClient.fql_query(query, store_link);
-}
-
-function store_link(response) {
-    if (!response) return;
-    replicas.set('link', response);
-}
 
 var link_image_template = {render: function(vars) {
         if (!vars.image_urls) return '';
@@ -423,6 +437,19 @@ FQL_Link.prototype.matches = function(query) {
             query_match(query, this.summary) ||
             query_match(query, this.url));
 };
+
+var link_type = new Table({
+      fields: ['link_id', 'owner', 'owner_comment', 'created_time', 'title', 'summary', 'url', 'image_urls']
+      ,table_name: 'link'
+      ,object_type: FQL_Link
+      ,uid_field: 'owner'
+    });
+
+register_post_type(link_type);
+
+function retrieve_link() {
+    return link_type.retrieve();
+}
 
 
 /* note posts */
@@ -495,7 +522,9 @@ display_timestamp();
 function retrieve_everything() {
     retrieve_user();
     retrieve_status();
-    retrieve_link();
+    for (var ii = 0; ii < post_types.length; ii++) {
+        post_types[ii].retrieve();
+    }
     retrieve_note();
     timestamp_backup();
 }
@@ -503,7 +532,9 @@ function retrieve_everything() {
 function reset_storage () {
     replicas.remove('user');
     replicas.remove('status');
-    replicas.remove('link');
+    for (var ii = 0; ii < post_types.length; ii++) {
+        replicas.remove(post_types[ii].table_name);
+    }
     replicas.remove('note');
     replicas.remove('timestamp');
 }
@@ -511,11 +542,14 @@ function reset_storage () {
 function export_storage () {
     var g = {
       status: replicas.get('status')
-      ,link: replicas.get('link')
       ,user: replicas.get('user')
       ,note: replicas.get('note')
       ,timestamp: replicas.get('timestamp')
     };
+    for (var ii = 0; ii < post_types.length; ii++) {
+        var table = post_types[ii].table_name;
+        g[table] = replicas.get(table);
+    }
 
     var popup = window.open('#', '_blank');
     popup.document.open('text/plain');
@@ -537,9 +571,8 @@ function update_posts() {
         posts.push(new FQL_Status(status[ii]));
     }
 
-    var link = replicas.get('link') || [];
-    for (var ii = 0; ii < link.length; ii++) {
-        posts.push(new FQL_Link(link[ii]));
+    for (var ii = 0; ii < post_types.length; ii++) {
+        posts = posts.concat(post_types[ii].as_objects());
     }
 
     var note = replicas.get('note') || [];
@@ -554,7 +587,11 @@ function update_posts() {
 }
 
 replicas.channel('status').on_change(update_posts);
-replicas.channel('link').on_change(update_posts);
+(function() {
+    for (var ii = 0; ii < post_types.length; ii++) {
+        replicas.channel(post_types[ii].table_name).on_change(update_posts);
+    }
+})();
 replicas.channel('note').on_change(update_posts);
 replicas.channel('user').on_change(update_posts); // because it's used in some templates.
 
