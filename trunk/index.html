@@ -30,7 +30,7 @@ font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
 font-size:11px;
 text-align:left;
 }
-.uiStreamMessage, .UIIntentionalStory_Header {
+.uiStreamMessage, .link_top {
 font-size:13px;
 font-weight:normal;
 margin: 0.5em 0 5px 0;
@@ -50,7 +50,7 @@ h1 {
 h2, h3, h4, h5, h6 {
     font-size:13px;
 }
-.uiStreamMessage .actorName, .uiStreamMessage .passiveName {
+.actorName, .uiStreamMessage .passiveName {
 font-weight:bold;
 }
 a {
@@ -82,12 +82,9 @@ margin: 1em;
 font-size: 15px;
 }
 
-.UIIntentionalStory_Message {
+.link_top_inside {
     font-size: 13px;
     font-weight: normal;
-}
-.UIIntentionalStory_Names {
-    font-weight: bold;
 }
 .UIStoryAttachment {
     margin: 6px 0 5px;
@@ -384,16 +381,10 @@ function url_domain_template(varname) {
 }
 
 var link_template = tmpl.as_template([
-    '<div class="UIIntentionalStory_Header">',
-    '<h3 class="UIIntentionalStory_Message">',
-    '<span class="UIIntentionalStory_Names">',
+    '<div class="link_top">',
+    '<h3 class="link_top_inside">',
     you_link_template,
-    '</span> ',
-    '<span class="UIStory_Message">',
     autolinkify_var('owner_comment'),
-    '<br/><br/>',
-    '<a target="_blank" href="',tmpl.v('url'),'">',
-    '<span>',tmpl.v('url'),'</span>',
     '</h3>',
     '</div>',
 

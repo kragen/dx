@@ -84,6 +84,8 @@ D add_me: find out username, for use in templates
 
 - do something sensible with schemeless links
 
+- actually extract the domain name from links
+
 - make export use a textarea?
 
 - add a "post status to your wall" button
@@ -152,6 +154,8 @@ D clear:left
       worked; and that "no statuses" would appear after page load
 
 - Analytics: make sure to bring over the analytics code, at least!
+
+- make autoformat (autolinkify) turn \n into <br>
 
 - Items from Yelena chat:
 
