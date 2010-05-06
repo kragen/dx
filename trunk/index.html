@@ -290,8 +290,11 @@ function displayDate(unix_epoch) {
 }
 
 function autoformat(text) {
-    return (''+text).replace(/http:\/\/[^\s<>"]*[^\s<>".,]/g,
-                             '<a href="$&" target="_blank">$&</a>');
+    if (text === null) return '';
+    return (''+text)
+        .replace(/\n/g, '<br/>')
+        .replace(/http:\/\/[^\s<>"]*[^\s<>".,]/g,
+                 '<a href="$&" target="_blank">$&</a>');
 }
 
 function autoformat_var(v) {
