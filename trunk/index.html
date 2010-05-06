@@ -86,14 +86,14 @@ font-size: 15px;
     font-size: 13px;
     font-weight: normal;
 }
-.UIStoryAttachment {
+.link_bottom {
     margin: 6px 0 5px;
 }
-.UIStoryAttachment_Media {
+.link_image {
     float: left;
     padding-right: 10px;
 }
-.UIStoryAttachment_Media img {
+.link_image img {
     max-width: 130px;
     max-height: 130px;
 }
@@ -389,12 +389,12 @@ var link_template = tmpl.as_template([
     '</div>',
 
 
-    '<div class="UIStoryAttachment">',
+    '<div class="link_bottom">',
 
-    '<div class="UIStoryAttachment_Media UIStoryAttachment_MediaSingle">',
-     '<div class="UIMediaItem">',
+    '<div class="link_image">',
+     '<div>',
       '<a target="_blank" href="',tmpl.v('url'),'">',
-       '<div class="UIMediaItem_Wrapper">',
+       '<div>',
         link_image_template,
        '</div>',
       '</a>',
