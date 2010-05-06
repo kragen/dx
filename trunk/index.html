@@ -120,7 +120,7 @@ img {
 <span class="show_only_when_no_posts_exist">Click the button below to grab</span
 ><span class="show_only_when_posts_exist">This app grabs</span
 > all the stuff you've ever posted on
-Facebook. It's just all of your past Facebook statuses and shared
+Facebook. It's just all of your past Facebook status messages and shared
 links so far. It will download a backup copy of your Stuff 
 (this usually takes less than five seconds)
 and let you
@@ -156,7 +156,10 @@ communication between your browser and Facebook.
 <span class="show_only_when_no_posts_exist"><span class="show_only_when_logged_in"
 >|</span></span><span class="show_only_when_posts_exist"
 >|</span>
-<a href="#" onclick="$('.devtools').show();$(this).parent().hide(); return false">show dev tools</a></span>
+<a href="#" onclick="$('.devtools').toggle();$('.devtoolsshow').toggle(); return false"
+><span class="devtoolsshow">show</span
+><span class="devtools">hide</span
+> dev tools</a></span>
 </div>
 </div>
 
