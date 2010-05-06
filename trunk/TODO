@@ -1,39 +1,6 @@
-bD stick an FQL console into Disconnect
-
 - request extended permissions to read_stream (no)
 
-D write FQL to save a copy of all of the user's status messages
-
-D factor out the localStorage/globalStorage thing from knx.js
-
-D write some piece of code to display old status messages (now I am
-  wishing I had finished my template system rewrite, or that we'd
-  adopted MJT, already)
-
-D save the old status messages into local/globalStorage
-
-D write something to search the status messages
-
 - pull other kinds of data: notes? links?
-
-    - starting with links.
-
-        D `select link_id,owner,owner_comment,created_time,title,summary,url,image_urls from link where owner = 1173721181`
-
-        D make Link and Status classes implementing a "post protocol":
-          `.render() -> HTML`, `.time_t() -> int`, and
-          `.matches(string) -> bool`
-
-        D persist not the heterogeneous collection of posts, but the
-          FQL results.
-
-        D make a collection of posts that contains all currently known
-          posts, which updates when new queries finish.
-
-        D change search to run over the posts instead of the status
-          messages
-
-        D make link template look like FB's
 
     - notes
 
@@ -45,42 +12,12 @@ D write something to search the status messages
 
     - photos -- mostly b/c we don't have a good way to back up. Tell people to save as .mht? really?
 
-D rename erase button
-
-D make search work for links
-
-D do the right search at page load time
-
-D make unified "download everything" button
-
-    D write function to ensure session and get both statuses and links
-
-    D hide most other buttons by default
-
-    D hide search by default
-
-D hide "log out" button when you're not logged in
-
-D hide "delete local backup" button when there is no local backup
-
-D hide "json export in popup" button when there's nothing to export
-
-D rename display_status_messages!
-
-D remove extra call to it in the initialization function
-
-D rename retrieve_status_messages
-
 - make "progress bar" with a list of all the data elements to get,
   checkmarks by the ones obtained, spinners by those currently being
   refreshed, maybe use dimming and strikethrough to indicate those not
   yet implemented and/or not implementable
 
 - or at least have SOME kind of throbber
-
-D refactor replicas.on_change(a, b) to replicas.channel(a).on_change(b)
-
-D add_me: find out username, for use in templates
 
 - do something sensible with schemeless links
 
@@ -98,8 +35,6 @@ X how well do we handle dates in the near future? They all get
 - versioning
 
 - fix date strings to be more useful
-
-D clear:left
 
 - bold search string occurrences?
 
@@ -125,10 +60,6 @@ D clear:left
   available? We should provide some kind of error message.
 
 - feedback from watching Beatrice use it:
-
-    - the current big button doesn't look enough like a button (fixed)
-
-    - the "log out" link (before you've logged in!) is distracting (fixed)
 
     - "I don't know what to search for"
 
@@ -157,31 +88,3 @@ D clear:left
 - Analytics: make sure to bring over the analytics code, at least!
 
 - make autoformat (autolinkify) turn \n into <br>
-
-- Items from Yelena chat:
-
-    D add ability to remove dev tools
-
-    D remove “no search results found” when nothing to search. also, "no stuff found"
-
-    D simplify CSS
-
-    D add "Congratulations! Here is your stuff as of XXX, X days ago, and
-      it has been backed up! Click here to bring that backup up to date."
-      or "No backup yet."
-
-    D change logout link to "log out of facebook"
-
-    D put logout button in upper right-hand corner
-
-    D add copyright notices
-
-    X how to clarify that your backup is available even if you aren’t
-      logged in to Facebook? (Maybe we have this covered now.)
-
-    X Fix copy. See files for latest. (Rohit has revised it;
-      presumably he's happy with it.)
-
-    X Add title graphic. (??)
-
-    D simplify CSS more
