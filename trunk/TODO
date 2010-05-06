@@ -1,16 +1,18 @@
-- request extended permissions to read_stream (no)
+- make autoformat (autolinkify) turn \n into <br>
 
-- pull other kinds of data: notes? links?
+- do something sensible with schemeless links
 
-    - notes
+- actually extract the domain name from links
 
-    - comments on above object ids?
+- add another post type: notes
 
-    - albums  -- very important for visual appeal of thumbs (and comments on photos)
+- back up friendships too
 
-    - friendships
+- back up photos too -- mostly b/c we don't have a good way to back up. Tell people to save as .mht? really?
 
-    - photos -- mostly b/c we don't have a good way to back up. Tell people to save as .mht? really?
+- back up comments on our posts &c. too
+
+- back up albums too -- very important for visual appeal of thumbs (and comments on photos)
 
 - make "progress bar" with a list of all the data elements to get,
   checkmarks by the ones obtained, spinners by those currently being
@@ -18,10 +20,6 @@
   yet implemented and/or not implementable
 
 - or at least have SOME kind of throbber
-
-- do something sensible with schemeless links
-
-- actually extract the domain name from links
 
 - make export use a textarea?
 
@@ -32,7 +30,7 @@ X how well do we handle dates in the near future? They all get
 
 - do automatic updates?
 
-- versioning
+- versioning: prevent loss of old backups when new ones are loaded
 
 - fix date strings to be more useful
 
@@ -48,7 +46,7 @@ X how well do we handle dates in the near future? They all get
   or move to S3 using form POST to create short-lived files:
   <http://developer.amazonwebservices.com/connect/entry.jspa?externalID=1434>
 
-- scoping storage: prefix keys in localStorage with a common prefix,
+D scoping storage: prefix keys in localStorage with a common prefix,
   or store everything under a single key?
 
 - if we start getting traffic, we should consider a "send stats to
@@ -73,9 +71,10 @@ X how well do we handle dates in the near future? They all get
 
     - "it's really cool"
 
-    - "Statuses? Status messages."
+    D "Statuses? Status messages."
 
-    - Use the standard big green download button!
+    - Use the standard big green download button! (Maybe would
+      increase Smruti's confusion: "Am I downloading software?")
 
     - spinner while loading? 
 
@@ -85,6 +84,7 @@ X how well do we handle dates in the near future? They all get
       sign of any correct behavior except that the show-tools link
       worked; and that "no statuses" would appear after page load
 
-- Analytics: make sure to bring over the analytics code, at least!
+D Analytics: make sure to bring over the analytics code, at least!
 
-- make autoformat (autolinkify) turn \n into <br>
+- request extended permissions to read_stream (no)
+
