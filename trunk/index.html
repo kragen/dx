@@ -37,11 +37,15 @@ textarea { display: block }
     padding: 1em;
 }
 .logincontainer { margin: 2em; float: right; }
+h1#logo { font-weight: normal; }
 h1#logo > img { vertical-align: middle; }
-.red { color: #822; }
+.red { color: #A22; }
 .green { color: #282; }
 .blue { color: #228; }
-.normal { font-weight: normal; }
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+.small { font-size: 66%; }
+.inline_block { display: inline-block; }
 .topbar {
     text-align: right;
     padding: 0.1em 0em;
@@ -49,9 +53,9 @@ h1#logo > img { vertical-align: middle; }
     background-color: #EFEFEF;
     margin-bottom: 1em;
 }
-.topbar > * {font-size: 75%; padding-right:.75em;}
-body { margin: 0 }
-.posts, .heading-material { margin: 0.5em }
+.topbar { font-size: 75%; padding: 0.5em 1em;}
+body { margin: 0; }
+.posts, .heading-material { margin: 1em }
 </style>
 
 <style type="text/css">
@@ -99,9 +103,15 @@ img { border: 0 none }
 </head>
 <body>
   <div class="topbar show_only_when_logged_in"><a href="javascript:FB.Connect.logoutAndRedirect(location.href);">log out of Facebook</a></div>
+<!--
+  <div class="topbar show_when_posts_exist">
+    <div class="inline_block">Exploring a backup made for <span class="backup_user">you</span> <span class="backup_timestamp">your last backup</span></div>
+    <div class="inline_block show_only_when_logged_in"> | <a href="javascript:FB.Connect.logoutAndRedirect();">log out of Facebook</a></div>
+  </div>
+-->
   <div class="heading-material">
     <div style="position: relative;">
-      <h1 id="logo"><img src="http://knx.to/i/trefoil_8bit.png" /> <span class="red">Disco</span> <span class="green">Explorer</span> <span class="blue normal">for Facebook</span></h1>
+      <h1 id="logo"><img src="http://knx.to/i/trefoil_8bit.png" /> <span class="red bold">Disco</span><span class="green">Explorer</span> <span class="blue small">for Facebook</span></h1>
       <div class="logincontainer show_only_when_no_posts_exist">
         <a class="login"
            href="javascript:FB.Connect.requireSession(retrieve_everything)">
@@ -119,7 +129,7 @@ img { border: 0 none }
           less than five seconds) and let you Search it too. The backup copy
           will be stored on your computer in your browser until you delete it.</p>
 
-        <p class="show_only_when_no_posts_exist">Note: None of this data ever gets sent to our server. In fact, we don’t even have a server because  it’s all direct
+        <p class="show_only_when_no_posts_exist">Note: None of this data ever gets sent to our servers. In fact, we don’t even have database servers because it’s all direct
           communication between your browser and Facebook.</p>
 
         <p class="show_only_when_posts_exist">
@@ -568,6 +578,15 @@ function display_timestamp() {
 replicas.channel('timestamp').on_change(display_timestamp);
 setInterval(display_timestamp, 60*1000);
 display_timestamp();
+
+function display_user() {
+    var user = replicas.get('user') || [{name: 'You'}];
+    if (user && user[0] && user[0].name) 
+        $('.backup_user').text(user[0].name);
+}
+
+replicas.channel('user').on_change(display_user);
+display_user();
 
 function retrieve_everything() {
     retrieve_user();
