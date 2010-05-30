@@ -43,6 +43,17 @@ var tmpl = {
                 return '';
             }};
     },
+  ifelsedef: function(varname, template, else_template) {
+        template = tmpl.as_template(template);
+        else_template = tmpl.as_template(else_template);
+        return {render: function(vars) { 
+                if (vars[varname] != undefined) 
+                    return template.render(vars); 
+                else 
+                    return else_template.render(vars);
+                return '';
+            }};
+    },
   seq: function(templates) {
         templates = $.map(templates, tmpl.as_template);
         return {render: function(vars) {
