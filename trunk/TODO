@@ -13,7 +13,18 @@ D rename to "Disco Explorer"
 - do something sensible with schemeless links
 
     - for me to repro this, Rohit needs to give me his JSON and I need
-      to be able to restore it
+      to be able to restore it. Here's an example:
+
+        {
+        "link_id":5939824085,
+        "owner":500084485,
+        "owner_comment":"Hey, I could use some help here, simplifying and clarifying this little alpha-test application we've been hacking on... Good luck finding those \"special\" photos of your friends! :)",
+        "created_time":1193979841,
+        "title":"HotShots Photos",
+        "summary":"HotShots helps you discover and share the most interesting photos of your friends (and even your friends' friends)! Star the pictures you think are HotShots and find out what others think is worth seeing too! Play along & find out how you rank...\u000a",
+        "url":"HotShots Photos",
+        "image_urls":null
+        },
 
 - actually extract the domain name from links
 
