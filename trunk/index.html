@@ -160,7 +160,7 @@ img { border: 0 none }
       </div>
       <div>
         <span class="show_only_when_posts_exist">
-          <a href="javascript:export_storage()">json export in popup</a>
+          <a href="javascript:export_storage()">json export in textarea</a>
           | <a href="javascript:reset_storage()">delete the backup copy stored in this browser</a>
         </span>
         <span>
@@ -636,10 +636,13 @@ function export_storage () {
         g[table] = replicas.get(table);
     }
 
-    var popup = window.open('#', '_blank');
-    popup.document.open('text/plain');
-    popup.document.write(JSON.stringify(g, undefined, 3));
-    popup.document.close();
+    $('<textarea cols="64" rows="16" id="export"></textarea>')
+        .insertBefore($('.searchline'))
+        .val(JSON.stringify(g, undefined, 3));
+    $('<h2>Copy and paste the JSON from below to back up ' +
+      'your stuff outside the browser. Click here to hide.</h2>')
+        .click(function() { $(this).remove(); $('#export').remove() })
+        .insertBefore('#export');
 }
 
 
