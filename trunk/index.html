@@ -356,11 +356,11 @@ Table.prototype.fql = function() {
             +' from '+this.table_name
             +' where '+this.uid_field+' = '+FB.Connect.get_loggedInUser());
 };
-Table.prototype.retrieve = function() {
+Table.prototype.retrieve = function(on_completion) {
     var that = this;
     FB.Facebook.apiClient.fql_query(this.fql(), function(response) {
-            if (!response) return;
-            replicas.set(that.table_name, response);
+            if (response) replicas.set(that.table_name, response);
+            if (on_completion) on_completion(!!response);
         });
 };
 Table.prototype.as_objects = function() {
@@ -585,18 +585,29 @@ var user_type = new Table({
       ,uid_field: 'uid'
     });
 
-function retrieve_user() { return user_type.retrieve() }
+function retrieve_user(cb) { return user_type.retrieve(cb) }
 
 
 
 /* misc. UI functionality */
 
+var throbber_interval;
+
+function pulse_throbber() {
+    $('.throbber').html($('.throbber').html() + '.');
+}
+
 function start_throbber() {
     $('.throbber').html('Working...');
+    throbber_interval = setInterval(pulse_throbber, 125);
 }
 
 function stop_throbber() {
     $('.throbber').html('');
+    if (throbber_interval) {
+        clearInterval(throbber_interval);
+        throbber_interval = null;
+    }
 }
 
 function timestamp_backup() {
@@ -621,12 +632,35 @@ function display_user() {
 replicas.channel('user').on_change(display_user);
 display_user();
 
+function barrier_synchronization() {
+    var rv = {
+      _outstanding: 0
+      ,new_dependency: function() {
+            rv._outstanding++;
+            return function() { rv._outstanding--; rv._update() };
+        }
+      ,_update: function() { 
+            if (!this._outstanding) this._completion_callback(); 
+        }
+      ,ready: function(cb) { this._completion_callback = cb; this._update() }
+    };
+    return rv;
+}
+        
+
 function retrieve_everything() {
-    retrieve_user();
+    var retrievals = barrier_synchronization();
+    start_throbber();
+
+    retrieve_user(retrievals.new_dependency());
     for (var ii = 0; ii < post_types.length; ii++) {
-        post_types[ii].retrieve();
+        post_types[ii].retrieve(retrievals.new_dependency());
     }
-    timestamp_backup();
+
+    retrievals.ready(function() {
+            timestamp_backup();
+            stop_throbber();
+        });
 }
 
 function reset_storage () {
