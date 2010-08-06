@@ -23,6 +23,7 @@
 <style type="text/css">
 textarea { display: block }
 .devtools { display: none }
+.throbber { font-size: 2em }
 .searchline { padding: 2em; }
 .show_only_when_posts_exist, .show_only_when_logged_in { display: none } /* by default */
 .login {
@@ -154,6 +155,8 @@ img { border: 0 none }
             Click here to bring the backup up to date.</a>
         </p>
       </div>
+
+      <div class="throbber"></div>
 
       <div class="searchline show_only_when_posts_exist">
         Search: <input class="search" size="64" />
@@ -588,6 +591,14 @@ function retrieve_user() { return user_type.retrieve() }
 
 /* misc. UI functionality */
 
+function start_throbber() {
+    $('.throbber').html('Working...');
+}
+
+function stop_throbber() {
+    $('.throbber').html('');
+}
+
 function timestamp_backup() {
     replicas.set('timestamp', new Date().getTime()/1000);
 }
@@ -626,7 +637,7 @@ function reset_storage () {
     replicas.remove('timestamp');
 }
 
-function export_storage () {
+function export_storage_tail() {
     var g = {
       user: replicas.get('user')
       ,timestamp: replicas.get('timestamp')
@@ -643,6 +654,12 @@ function export_storage () {
       'your stuff outside the browser. Click here to hide.</h2>')
         .click(function() { $(this).remove(); $('#export').remove() })
         .insertBefore('#export');
+    stop_throbber();
+}
+
+function export_storage () {
+    start_throbber();
+    setTimeout(export_storage_tail, 1);
 }
 
 
