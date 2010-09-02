@@ -32,30 +32,8 @@ Then put the files on your web server and you should be good to go.
 
 ### Fake out knx.to ###
 
-The API key in the source belongs to knx.to, which is currently an
-inactive web site. If you persuade your browser that your server is
-knx.to, it will work.  These directions assume you have a web server
-running on the same machine as your browser.
-
-1. Edit your `/etc/hosts` or `hosts.txt` file; find the line that
-   looks kind of like this:
-
-        127.0.0.1	inexorable	localhost.localdomain	localhost  
-
-    and add `knx.to` to it:
-
-        127.0.0.1	inexorable	localhost.localdomain	localhost   knx.to
-
-    If you’re on a Mac with recent MacOS, I’m sure there’s some way to
-    do this, but I have no idea what it is. Editing `/etc/hosts`
-    doesn’t work.
-
-    If you’re hosting this somewhere besides on the same 
-
-2. Restart your browser if necessary.
-
-3. Go to the URL on your server where you unpacked Disco Explorer,
-   such as <http://localhost/dc>.
+I tried making my machine pretend to be knx.to, but it looks like the
+API key has been revoked, as well.
 
 Contact
 -------
